@@ -2,68 +2,35 @@ import dash
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
+import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
 from jupyter_dash import JupyterDash
 
-external_stylesheets = ['https://raw.githubusercontent.com/henryfchapman/TopBrandsDashboard/main/customStyleSheet.css']
+from graphMaker import getPostVolumeGraph, getSentimentGraph
 
-#'https://raw.githubusercontent.com/henryfchapman/LogoDesign/main/customStyleSheet.css'
+app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app.layout =  dbc.Container(children=[
+	dbc.Row([
+		dbc.Col(html.Img(src="assets/infegyLogo.png", style={'width':'100%', "float": "left"}), width=2),
+		dbc.Col(dbc.Row([dbc.Col(html.H1(children=['Infegy Top Brands of 2022']), width=8),
+				dbc.Row(html.H3(children=['Analyzing the Top US Companies'])) 
+			]), align="center")
+	], justify='start'),
 
-# assume you have a "long-form" data frame
-# see https://plotly.com/python/px-arguments/ for more options
-df_bar = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
 
-fig = px.bar(df_bar, x="Fruit", y="Amount", color="City", barmode="group")
+	dcc.Dropdown(['New York City', 'Montréal', 'San Francisco'], 'Montréal'),
 
-app.layout = html.Div(children=[
-    # All elements from the top of the page
-    html.Div([
-        html.Div([
-            html.H1(children='Hello Dash'),
+	dbc.Row([
+		dbc.Col(dcc.Graph(figure=getPostVolumeGraph())),
+		dbc.Col(dcc.Graph(figure=getSentimentGraph())),
+		])
 
-            html.Div(children='''
-                Dash: A web application framework for Python.
-            '''),
+], fluid = True)
 
-            dcc.Graph(
-                id='graph1',
-                figure=fig
-            ),  
-        ], className='six columns'),
-        html.Div([
-            html.H1(children='Hello Dash'),
+app.title = 'Infegy Top Brands' 
 
-            html.Div(children='''
-                Dash: A web application framework for Python.
-            '''),
-
-            dcc.Graph(
-                id='graph2',
-                figure=fig
-            ),  
-        ], className='six columns'),
-    ], className='row'),
-    # New Div for all elements in the new 'row' of the page
-    html.Div([
-        html.H1(children='Hello Dash'),
-
-        html.Div(children='''
-            Dash: A web application framework for Python.
-        '''),
-
-        dcc.Graph(
-            id='graph3',
-            figure=fig
-        ),  
-    ], className='row'),
-])
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+	app.run_server(debug=True)
