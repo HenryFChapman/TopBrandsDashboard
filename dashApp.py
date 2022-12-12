@@ -6,7 +6,9 @@ import pandas as pd
 import plotly.express as px
 from jupyter_dash import JupyterDash
 
-external_stylesheets = ['customStyleSheet.css']
+external_stylesheets = ['https://raw.githubusercontent.com/henryfchapman/TopBrandsDashboard/main/customStyleSheet.css']
+
+#'https://raw.githubusercontent.com/henryfchapman/LogoDesign/main/customStyleSheet.css'
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
