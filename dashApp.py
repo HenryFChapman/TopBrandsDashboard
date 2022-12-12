@@ -9,7 +9,12 @@ from jupyter_dash import JupyterDash
 
 from graphMaker import getPostVolumeGraph, getSentimentGraph
 
+#load entities
+entities = pd.read_csv("entities.csv", encoding = 'utf-8')
+
+
 app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.title = 'Infegy Top Brands' 
 
 app.layout =  dbc.Container(children=[
 	dbc.Row([
@@ -20,17 +25,34 @@ app.layout =  dbc.Container(children=[
 	], justify='start'),
 
 
-	dcc.Dropdown(['New York City', 'Montréal', 'San Francisco'], 'Montréal'),
+	html.Label(['Pick a top brand:'],style={'font-weight': 'bold'}),
+	dcc.Dropdown(entities['EntityName'].tolist(), value = 'Apple', id='dropdown',),
 
 	dbc.Row([
-		dbc.Col(dcc.Graph(figure=getPostVolumeGraph())),
-		dbc.Col(dcc.Graph(figure=getSentimentGraph())),
+		dbc.Col(dcc.Graph(id='postVolume')),
+		#dbc.Col(dcc.Graph(figure=getPostVolumeGraph())),
+		dbc.Col(dcc.Graph(id='sentimentGraph')),
 		])
 
 ], fluid = True)
 
-app.title = 'Infegy Top Brands' 
+@app.callback(
+	Output('postVolume', 'figure'),
+    [Input(component_id='dropdown', component_property='value')]
+	)
+
+def select_graph(value):
+	fig = getPostVolumeGraph(value)
+	return fig
+
+
+@app.callback(Output('sentimentGraph', 'figure'),
+              Input(component_id='dropdown', component_property='value'))
+def update_graph_b(value):
+	fig = getSentimentGraph(value)
+	return fig
 
 
 if __name__ == '__main__':
-	app.run_server(debug=True)
+	app.run_server(host="0.0.0.0", port="8050")
+	#app.run_server(debug=True)

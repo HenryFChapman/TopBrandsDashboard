@@ -52,9 +52,9 @@ def getGraphLayout(fig, graphTitle, df):
     #fig.update_layout()
 
 
-def getSentimentGraph():
+def getSentimentGraph(value):
 
-    df = pd.read_excel("House Of The Dragon - sentiment.xlsx")
+    df = pd.read_csv("data/sentiment/" + value + ".csv")
     fig = make_subplots(specs=[[{"secondary_y": False}]])
 
     fig.add_trace(go.Scatter(
@@ -65,14 +65,14 @@ def getSentimentGraph():
         showlegend = False
         ))
 
-    fig.add_hline(y=0, line_dash="dot",
-              annotation_text="Negative Sentiment", 
-              annotation_position="bottom right")
-    fig.add_hline(y=0, line_dash="dot",
-              annotation_text="Positive Sentiment", 
-              annotation_position="top right")
+    fig.add_hline(y=0, line_dash="dot",)
+#              annotation_text="Negative Sentiment", 
+ #             annotation_position="bottom right")
+    fig.add_hline(y=0, line_dash="dot",)
+ #             annotation_text="Positive Sentiment", 
+ #             annotation_position="top right")
 
-    fig.add_hrect(y0=0, y1=-.25, line_width=0, fillcolor="red", opacity=0.1)
+    fig.add_hrect(y0=0, y1=df['Net Sentiment'].min()-.1, line_width=0, fillcolor="red", opacity=0.1)
     fig.add_hrect(y0=0, y1=1, line_width=0, fillcolor="green", opacity=0.1)
 
     fig = getGraphLayout(fig, "Net Sentiment", df)
@@ -82,14 +82,13 @@ def getSentimentGraph():
     return fig
 
 
-def getPostVolumeGraph():
-    df = pd.read_excel("Inflation - volume.xlsx")
+def getPostVolumeGraph(value):
+    df = pd.read_csv("data/volume/" + value + ".csv")
     df = df[df['Date']> "1/1/2022"]
 
     fig = make_subplots(specs=[[{"secondary_y": False}]])
     fig.add_trace(go.Scatter(x=df["Date"], y=df["Universe"],
         line_shape='spline', 
-        mode='lines+markers', 
         marker_symbol='circle',
         marker_color = 'white',
         marker = dict(line = dict(color= "#75C1B3", width = 2))), secondary_y=False,)
