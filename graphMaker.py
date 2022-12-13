@@ -66,17 +66,12 @@ def getSentimentGraph(value):
         ))
 
     fig.add_hline(y=0, line_dash="dot",)
-#              annotation_text="Negative Sentiment", 
- #             annotation_position="bottom right")
     fig.add_hline(y=0, line_dash="dot",)
- #             annotation_text="Positive Sentiment", 
- #             annotation_position="top right")
-
-    fig.add_hrect(y0=0, y1=df['Net Sentiment'].min()-.1, line_width=0, fillcolor="red", opacity=0.1)
+    
+    fig.add_hrect(y0=0, y1=-1, line_width=0, fillcolor="red", opacity=0.1)
     fig.add_hrect(y0=0, y1=1, line_width=0, fillcolor="green", opacity=0.1)
 
     fig = getGraphLayout(fig, "Net Sentiment", df)
-
     fig.update_yaxes(title_text="Net Sentiment", secondary_y=False)
 
     return fig
@@ -96,6 +91,6 @@ def getPostVolumeGraph(value):
 
     fig = getGraphLayout(fig, "Post Volume", df)
 
-    fig.update_yaxes(title_text="Post Volume", secondary_y=False)
+    fig.update_yaxes(title_text="Posts", secondary_y=False)
 
     return fig

@@ -97,7 +97,7 @@ def createQuery(entityName):
 #			dateRange: from when you want data. For example, you can use "3 months ago" to get data from the past three months. 
 def main():
 
-	entities = pd.read_csv("entities.csv")
+	entities = pd.read_excel("entities.xlsx")
 
 	for i, row in entities.iterrows():
 		print(row['EntityName'])
