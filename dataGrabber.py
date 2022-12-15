@@ -4,6 +4,45 @@ import json
 import sys
 import urllib
 import pandas as pd
+import re
+
+def split_into_sentences(text):
+	alphabets= "([A-Za-z])"
+	prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
+	suffixes = "(Inc|Ltd|Jr|Sr|Co)"
+	starters = "(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
+	acronyms = "([A-Z][.][A-Z][.](?:[A-Z][.])?)"
+	websites = "[.](com|net|org|io|gov)"
+	digits = "([0-9])"
+
+	text = " " + text + "  "
+	text = text.replace("\n"," ")
+	text = re.sub(prefixes,"\\1<prd>",text)
+	text = re.sub(websites,"<prd>\\1",text)
+	text = re.sub(digits + "[.]" + digits,"\\1<prd>\\2",text)
+	if "..." in text: text = text.replace("...","<prd><prd><prd>")
+	if "Ph.D" in text: text = text.replace("Ph.D.","Ph<prd>D<prd>")
+	text = re.sub("\s" + alphabets + "[.] "," \\1<prd> ",text)
+	text = re.sub(acronyms+" "+starters,"\\1<stop> \\2",text)
+	text = re.sub(alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]","\\1<prd>\\2<prd>\\3<prd>",text)
+	text = re.sub(alphabets + "[.]" + alphabets + "[.]","\\1<prd>\\2<prd>",text)
+	text = re.sub(" "+suffixes+"[.] "+starters," \\1<stop> \\2",text)
+	text = re.sub(" "+suffixes+"[.]"," \\1<prd>",text)
+	text = re.sub(" " + alphabets + "[.]"," \\1<prd>",text)
+	if "”" in text: text = text.replace(".”","”.")
+	if "\"" in text: text = text.replace(".\"","\".")
+	if "!" in text: text = text.replace("!\"","\"!")
+	if "?" in text: text = text.replace("?\"","\"?")
+	text = text.replace(".",".<stop>")
+	text = text.replace("?","?<stop>")
+	text = text.replace("!","!<stop>")
+	text = text.replace("<prd>",".")
+	sentences = text.split("<stop>")
+	sentences = sentences[:-1]
+	sentences = [s.strip() for s in sentences]
+	return sentences
+
+
 
 def parseVolume(name, data):
 
@@ -38,6 +77,25 @@ def parseSentiment(name, data):
 	volumeData.to_csv("data/sentiment/" + name + ".csv")
 
 
+def parseEmotions(name, data):
+	emotionsData = pd.DataFrame()
+
+	date = []
+
+	totalDocuments = data[0]['documents']
+	emotions = data[0]['emotions']
+
+	for emotion in emotions:
+		if emotion['name'] == 'trust':
+			trust = emotion['documents']
+
+	trustPercentage = trust/totalDocuments
+
+	trustString = str(round(trustPercentage*100, 2)) + "%"
+
+	return trustString, totalDocuments
+
+
 #Calling Function that Identifies a query + target endpoint and returns a dataframe
 #Parameters:
 #			query: A properly url encoded string in a format that Infegy Atlas understands. 
@@ -67,7 +125,7 @@ def getData(query, endpoint, limit):
 #Parameters:
 #			queryText: A properly formatted boolean string. For example, if you want to query all posts that mention "Tesla", the query would be "tesla".
 #			dateRange: A string saying from when you want data from. For example, if you want data from three months ago to the present, this value would be "3 months ago"
-def createQuery(entityName):
+def createQuery(entityName, period):
 
 	#Nested Query Dictionary
 	query = {
@@ -84,31 +142,45 @@ def createQuery(entityName):
     "min": 1640995200,
     "max": 1670889599
    }],
-  "group_by": "week",
+  "group_by": period,
   "group_on": "published"
  }
 
 	return query
 
-
-#This function is the main() method
-#Parameters:
-#			queryText: A string of what you're searching for in Infegy Atlas
-#			dateRange: from when you want data. For example, you can use "3 months ago" to get data from the past three months. 
 def main():
 
 	entities = pd.read_excel("entities.xlsx")
 
+
+	oneSentence = []
+	trustSentences = []
+	totalDocuments = []
+
 	for i, row in entities.iterrows():
 		print(row['EntityName'])
 
-		query = createQuery(row['EntityCode'])
+		query = createQuery(row['EntityCode'], "week")
 
-		volumeData = getData(query, "volume", 50)
-		parseVolume(row['EntityName'], volumeData)
+		#volumeData = getData(query, "volume", 50)
+		#parseVolume(row['EntityName'], volumeData)
 
-		volumeData = getData(query, "sentiment", 50)
-		parseSentiment(row['EntityName'], volumeData)
+		#volumeData = getData(query, "sentiment", 50)
+		#parseSentiment(row['EntityName'], volumeData)
+
+		query = createQuery(row['EntityCode'], "year")
+		emotionData = getData(query, "emotions", 50)
+		trustSentences.append(parseEmotions(row['EntityName'], emotionData)[0])
+		totalDocuments.append(parseEmotions(row['EntityName'], emotionData)[1])
+		oneSentence.append(split_into_sentences(row['WikiDescrip'])[0])
+
+	entities['oneSentence'] = oneSentence
+	entities['trustMetric'] = trustSentences
+	entities['totalDocuments'] = totalDocuments
+
+	entities = entities.sort_values(by='trustMetric', ascending = False)
+
+	entities.to_csv("entities.csv")
 
 main()
 
