@@ -15,7 +15,7 @@ d3.csv("entities.csv").then(function(data) {
 		tempCard.className = "card";
 
 		a = document.createElement("a");
-		a.href = "analysisPage.html?company=" + data[i].EntityName;
+		a.href = "analysisPage.html?company=" + encodeURI(data[i].EntityName);
 
 		picture = document.createElement("picture");
 		picture.className = "thumbnail";
@@ -35,7 +35,7 @@ d3.csv("entities.csv").then(function(data) {
 
 
 		var h4 = document.createElement("H4");
-		h4.innerHTML = "Infegy Trust Score: " + data[i].trustMetric + "<br>Total Documents: " + data[i].totalDocuments
+		h4.innerHTML = "Infegy Trust Score: " + data[i].trustMetric + "<br>Post Volume: " + data[i].totalDocuments
 
 		var p = document.createElement("P");
 		p.innerHTML = data[i].oneSentence;
