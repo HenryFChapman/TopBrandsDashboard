@@ -2,7 +2,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swaps" rel="stylesheet">
 
 <link rel="stylesheet" type="text/css" href="index.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.2/chart.min.js"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 
 <head>
@@ -17,7 +18,7 @@
 
       <div class='site-title'>
 
-        <a href="/"><img src="assets/infegyLogo.png"/></a>
+        <a href="/"><img src="assets/infegyLogoWhite.svg"/></a>
         <h1 class="site-title-text">Infegy's Most Trusted Brands of 2022</h1>
       </div>
 
@@ -29,34 +30,45 @@
 
   <div class="centered">
     <section class="analysisContainer">
-    	 <article class="analysisCard">
-    	 <div class="card-content">
-                            <h2>Vacation Image 02</h2>
-                            <p>Staff engagement synergize productive mindfulness and waste of resources cross sabers, or forcing function shotgun approach drink the Kool-aid.</p>
-                            <h4>Infegy Trust Score</h4>
-         </article>
+      <article class="analysisCard">
+        <div class="card-content">
+          <h2>Vacation Image 02</h2>
+          <p>Staff engagement synergize productive mindfulness and waste of resources cross sabers, or forcing function shotgun approach drink the Kool-aid.</p>
+          <h4>Infegy Trust Score</h4>
+        </article>
 
-         <article class="analysisCard">
-    	 <div class="card-content">
-                            <h2>Post Volume</h2>
-                            <div class="chart-container-1">
-                            <canvas id="chart-1"></canvas>
-                            </div>
+        <article class="analysisCard">
+          <div class="card-content">
+            <h2>Weekly Post Volume</h2>
+            <p>Post volume shows how many social media users talked about this particular brand throughout the year.</p>
+            <div class="chart-container-1">
+              <canvas id="chart-1"></canvas>
+            </div>
 
-         </article>
+          </article>
 
-         <article class="analysisCard">
-    	 <div class="card-content">
-                            <h2>Net Sentiment</h2>
-                            <div class="chart-container-1">
-                            <canvas id="chart-2"></canvas>
-                            </div>
-         </article>
+          <article class="analysisCard">
+            <div class="card-content">
+              <h2>Weekly Net Sentiment</h2>
+              <p>Net sentiment shows how brand sentiment changed over time throughout the year. As positive events occured, the brand will show a higher percentage of brand sentiment, while when negative events occured, that sentiment average will drop.</p>
+              <div class="chart-container-1">
+                <canvas id="chart-2"></canvas>
+              </div>
+            </article>
+
+            <article class="analysisCard">
+             <div class="card-content">
+              <h2>Top 15 Topics</h2>
+                <p>Top topics show which specific topics or phrases frequently occured when social media users talked about a particular brand. Topics with a darker shade of red were mentioned in more negative posts, while shaded green were mentioned in more positive documents.</p>
+                <div class="chart-container-1">
+                <canvas id="chart-3"></canvas>
+              </div>
+            </article>
 
 
-    </section><!-- .cards -->
-  </div><!-- .centered -->
+          </section><!-- .cards -->
+        </div><!-- .centered -->
 
-</main>
+      </main>
 
-<script src="populateAnalysisPage.js"></script>
+      <script src="populateAnalysisPage.js"></script>

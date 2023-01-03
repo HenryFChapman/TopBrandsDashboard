@@ -5,10 +5,11 @@ import sys
 import urllib
 import pandas as pd
 import re
+import matplotlib.cm
 
 def split_into_sentences(text):
 	alphabets= "([A-Za-z])"
-	prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
+	prefixes = "(Mr|St|Mrs|Ms|Dr|Ing|h|c|F)[.]"
 	suffixes = "(Inc|Ltd|Jr|Sr|Co)"
 	starters = "(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
 	acronyms = "([A-Z][.][A-Z][.](?:[A-Z][.])?)"
@@ -42,8 +43,6 @@ def split_into_sentences(text):
 	sentences = [s.strip() for s in sentences]
 	return sentences
 
-
-
 def parseVolume(name, data):
 
 	volumeData = pd.DataFrame()
@@ -58,7 +57,11 @@ def parseVolume(name, data):
 	volumeData['Date'] = date
 	volumeData['Universe'] = posts_universe
 
+	totalVolume = volumeData['Universe'].sum()
+
 	volumeData.to_csv("data/volume/" + name + ".csv")
+
+	return totalVolume
 
 def parseSentiment(name, data):
 
@@ -77,6 +80,43 @@ def parseSentiment(name, data):
 	volumeData.to_csv("data/sentiment/" + name + ".csv")
 
 
+def parseTopics(name, data):
+
+	volumeData = pd.DataFrame()
+
+	names = []
+	scores = []
+	posAppearances = []
+	appearances = []
+	colors = []
+
+	cmap = matplotlib.cm.get_cmap('RdYlGn')
+
+
+	for topic in data:
+		names.append(topic['name'])
+		scores.append(topic['score'])
+		posAppearances.append(topic['positive_documents'])
+		appearances.append(topic['documents'])
+
+		colors.append(matplotlib.colors.rgb2hex(cmap(topic['positive_documents'] / topic['documents'])))
+
+	topicData = pd.DataFrame()
+	topicData['Topic'] = names
+	topicData['Score'] = scores
+	topicData['positive_documents'] = posAppearances
+	topicData['documents'] = appearances
+	topicData['positive_percentage'] = topicData['positive_documents'] / topicData['documents']
+	topicData['colors'] = colors
+
+
+	topicData = topicData.sort_values(by = 'documents', ascending = False)
+
+	topicData = topicData.head(15)
+
+	topicData.to_csv("data/topics/" + name + ".csv")
+
+
 def parseEmotions(name, data):
 	emotionsData = pd.DataFrame()
 
@@ -91,7 +131,7 @@ def parseEmotions(name, data):
 
 	trustPercentage = trust/totalDocuments
 
-	trustString = str(round(trustPercentage*100, 2)) + "%"
+	trustString = round(trustPercentage*100, 2)
 
 	return trustString, totalDocuments
 
@@ -140,7 +180,7 @@ def createQuery(entityName, period):
   "filter": [{
     "id": "published",
     "min": 1640995200,
-    "max": 1670889599
+    "max": 1672531199
    }],
   "group_by": period,
   "group_on": "published"
@@ -152,26 +192,29 @@ def main():
 
 	entities = pd.read_excel("entities.xlsx")
 
-
 	oneSentence = []
 	trustSentences = []
 	totalDocuments = []
 
 	for i, row in entities.iterrows():
 		print(row['EntityName'])
-
 		query = createQuery(row['EntityCode'], "week")
 
-		#volumeData = getData(query, "volume", 50)
-		#parseVolume(row['EntityName'], volumeData)
+		volumeData = getData(query, "volume", 50)
+		totalVolume = parseVolume(row['EntityName'], volumeData)
 
-		#volumeData = getData(query, "sentiment", 50)
-		#parseSentiment(row['EntityName'], volumeData)
+		sentimentData = getData(query, "sentiment", 50)
+		parseSentiment(row['EntityName'], sentimentData)
 
 		query = createQuery(row['EntityCode'], "year")
 		emotionData = getData(query, "emotions", 50)
+
+		topicData = getData(query, "topics", 50)
+		parseTopics(row['EntityName'], topicData)
+
 		trustSentences.append(parseEmotions(row['EntityName'], emotionData)[0])
-		totalDocuments.append(parseEmotions(row['EntityName'], emotionData)[1])
+		totalDocuments.append(totalVolume)
+
 		oneSentence.append(split_into_sentences(row['WikiDescrip'])[0])
 
 	entities['oneSentence'] = oneSentence
@@ -179,6 +222,10 @@ def main():
 	entities['totalDocuments'] = totalDocuments
 
 	entities = entities.sort_values(by='trustMetric', ascending = False)
+
+	entities['trustMetric'] = entities['trustMetric'].astype(str)+"%"
+
+	entities['totalDocuments'] = entities['totalDocuments'].astype(int).map('{:,d}'.format)
 
 	entities.to_csv("entities.csv")
 

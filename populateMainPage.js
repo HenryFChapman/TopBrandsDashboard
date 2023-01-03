@@ -1,12 +1,8 @@
 
 d3.csv("entities.csv").then(function(data) {
     //data is an array of objects, with one object for each row in the CSV file
-    //console.log(data);
-
+	
     for (var i = 0; i < data.length; i++) {
-
-    	console.log(data[i])
-    	//console.log(data[i].EntityName)
 
     	var container = document.getElementsByClassName("cards");
 
@@ -15,7 +11,7 @@ d3.csv("entities.csv").then(function(data) {
 		tempCard.className = "card";
 
 		a = document.createElement("a");
-		a.href = "analysisPage.html?company=" + encodeURI(data[i].EntityName);
+		a.href = "analysisPage.html?company=" + encodeURI(data[i].EntityName.replace("&", "*"));
 
 		picture = document.createElement("picture");
 		picture.className = "thumbnail";
