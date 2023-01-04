@@ -233,6 +233,7 @@ big {
   border: 0;
   height: 100px;
   max-width: 600px;
+  max-height: 100%;
   text-align: center;
 }
 

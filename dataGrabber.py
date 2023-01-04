@@ -90,7 +90,7 @@ def parseTopics(name, data):
 	appearances = []
 	colors = []
 
-	cmap = matplotlib.cm.get_cmap('RdYlGn')
+	cmap = matplotlib.cm.get_cmap('Greens')
 
 
 	for topic in data:
@@ -116,6 +116,103 @@ def parseTopics(name, data):
 
 	topicData.to_csv("data/topics/" + name + ".csv")
 
+
+def parseLinks(name, data):
+
+
+
+	#Handles Links
+	links = []
+	#edgeList = []
+	for topic in data:
+
+		for relatedTopics in topic["related_topics"]:
+
+			tempNode = dict()
+			tempNode['source'] = topic['key']
+			tempNode['target'] = relatedTopics['key']
+
+			tempList = []
+			tempList.append(topic['key'])
+			tempList.append(relatedTopics['key'])
+			tempList.sort()
+
+			#s = '-'.join(tempList)
+			#edgeList.append(s)
+			links.append(tempNode)
+
+	linkDF = pd.DataFrame(links)
+	linkDF = pd.concat([linkDF['source'], linkDF['target']]).to_frame()
+	linkDF = linkDF.rename(columns={0:"id"}).value_counts().reset_index().rename(columns={0:"degree"})
+
+	nodes = []
+	for topic in data:
+		tempNode = dict()
+		tempNode['name'] = topic['topic']
+		tempNode['id'] = topic['key']
+		tempNode['score'] = topic['score']
+
+		if "cluster_id" not in topic.keys():
+			tempNode['cluster_id'] = -1
+		else:
+			tempNode['cluster_id'] = topic['cluster_id']
+
+		nodes.append(tempNode)
+
+		#loop through related nodes
+		for relatedTopic in topic['related_topics']:
+			tempNode = dict()
+			tempNode['name'] = relatedTopic['name']
+			tempNode['id'] = relatedTopic['key']
+			tempNode['score'] = relatedTopic['score']
+
+			if "cluster_id" not in topic.keys():
+				tempNode['cluster_id'] = -1
+			else:
+				tempNode['cluster_id'] = topic['cluster_id']
+
+			nodes.append(tempNode)
+
+			nodeDF = pd.DataFrame(nodes)
+			nodeDF = nodeDF.drop_duplicates(subset = 'id')
+	
+			#Merge in Degrees
+			nodeDF = nodeDF.merge(linkDF, how='left', on='id')
+
+			#Merge in Most Important Labels
+	#Get Unique Cluster IDs
+	clusterIDs = list(set(nodeDF['cluster_id'].tolist()))
+
+	justClusterList = {}
+	for clusterID in clusterIDs:
+		justCluster = nodeDF[nodeDF['cluster_id']==clusterID]
+
+		labelNum = 2
+
+		justCluster = justCluster.sort_values(by=['degree'], ascending = False).head(labelNum)
+		mostImportantLabels = '·'.join(justCluster['name'].tolist())
+
+		topID = justCluster.head(1)['id'].tolist()[0]
+
+		justClusterList.update({topID:mostImportantLabels})
+
+	mainLabels = []
+	for i, row in nodeDF.iterrows():
+		if row['id'] in justClusterList.keys():
+			mainLabels.append(justClusterList.get(row['id']))
+		else:
+			mainLabels.append("No")
+
+	nodeDF['mainLabel'] = mainLabels
+	nodeDF = nodeDF.sort_values(by=['degree'], ascending = True).fillna(0)
+	nodes = nodeDF.to_dict('records')
+
+	graphJSON = {}
+	graphJSON.update({"nodes":nodes})
+	graphJSON.update({"links":links})
+
+	with open('data/networks/'+name+'.json', 'w') as fp:
+		json.dump(graphJSON, fp)
 
 def parseEmotions(name, data):
 	emotionsData = pd.DataFrame()
@@ -153,7 +250,7 @@ def getData(query, endpoint, limit):
 	text_file.close()
 
 	#Base URL. This allows us to pass in a different endpoint (e.g. volume, ages, entities, etc.) To look at all the entities, please reference our API documentation. 
-	url = "https://atlas.infegy.com/api/v3/" + endpoint + "?api_key=" + key +  "&limit=" + str(limit) + "&q="+ query
+	url = "https://atlas-staging.infegy.com/api/v3/" + endpoint + "?api_key=" + key +  "&limit=" + str(limit) + "&q="+ query
 
 	#The meat of the script. This line of code sends a request to Infegy with all  those parameters and gets the data back in a formatted json.
 	data = requests.get(url).json()
@@ -200,34 +297,35 @@ def main():
 		print(row['EntityName'])
 		query = createQuery(row['EntityCode'], "week")
 
-		volumeData = getData(query, "volume", 50)
-		totalVolume = parseVolume(row['EntityName'], volumeData)
+		#volumeData = getData(query, "volume", 50)
+		#totalVolume = parseVolume(row['EntityName'], volumeData)
 
-		sentimentData = getData(query, "sentiment", 50)
-		parseSentiment(row['EntityName'], sentimentData)
+		#sentimentData = getData(query, "sentiment", 50)
+		#parseSentiment(row['EntityName'], sentimentData)
 
-		query = createQuery(row['EntityCode'], "year")
-		emotionData = getData(query, "emotions", 50)
+		#query = createQuery(row['EntityCode'], "year")
+		#emotionData = getData(query, "emotions", 50)
 
 		topicData = getData(query, "topics", 50)
 		parseTopics(row['EntityName'], topicData)
+		parseLinks(row['EntityName'], topicData)
 
-		trustSentences.append(parseEmotions(row['EntityName'], emotionData)[0])
-		totalDocuments.append(totalVolume)
+		#trustSentences.append(parseEmotions(row['EntityName'], emotionData)[0])
+		#totalDocuments.append(totalVolume)
 
-		oneSentence.append(split_into_sentences(row['WikiDescrip'])[0])
+		#oneSentence.append(split_into_sentences(row['WikiDescrip'])[0])
 
-	entities['oneSentence'] = oneSentence
-	entities['trustMetric'] = trustSentences
-	entities['totalDocuments'] = totalDocuments
+	#entities['oneSentence'] = oneSentence
+	#entities['trustMetric'] = trustSentences
+	#entities['totalDocuments'] = totalDocuments
 
-	entities = entities.sort_values(by='trustMetric', ascending = False)
+	#entities = entities.sort_values(by='trustMetric', ascending = False)
 
-	entities['trustMetric'] = entities['trustMetric'].astype(str)+"%"
+	#entities['trustMetric'] = entities['trustMetric'].astype(str)+"%"
 
-	entities['totalDocuments'] = entities['totalDocuments'].astype(int).map('{:,d}'.format)
+	#entities['totalDocuments'] = entities['totalDocuments'].astype(int).map('{:,d}'.format)
 
-	entities.to_csv("entities.csv")
+	#entities.to_csv("entities.csv")
 
 main()
 
