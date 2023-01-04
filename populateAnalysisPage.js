@@ -259,16 +259,11 @@ fetch("data/networks/"+myParam+".json").then(res => res.json()).then(data => {
 			if (node.mainLabel != "No") {
 				label = node.name;
 
-				ctx.lineWidth = 4;
-				ctx.strokeStyle = "#FFFFFF";
-				ctx.fillStyle = "#FFFFFF";
-				ctx.fillRect(ctx, 10, 10, 100, 50, 10, true);
-
 				const fontSize = 15 / globalScale;
 				ctx.font = `${fontSize}px Sans-Serif`;
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
-				ctx.fillStyle = "#708090";
+				ctx.fillStyle = "#2d333a";
 				ctx.fillText(label, node.x, node.y + 20);
 			}
 
@@ -299,16 +294,11 @@ fetch("data/networks/"+myParam+".json").then(res => res.json()).then(data => {
 		if (node.mainLabel != "No") {
 			label = node.name;
 
-			ctx.lineWidth = 4;
-			ctx.strokeStyle = "#FFFFFF";
-			ctx.fillStyle = "#FFFFFF";
-			ctx.fillRect(ctx, 10, 10, 100, 50, 10, true);
-
 			const fontSize = 15 / globalScale;
 			ctx.font = `${fontSize}px Sans-Serif`;
 			ctx.textAlign = "center";
 			ctx.textBaseline = "middle";
-			ctx.fillStyle = "#708090";
+			ctx.fillStyle = "#2d333a";
 			ctx.fillText(label, node.x, node.y + 20);
 		}
 
