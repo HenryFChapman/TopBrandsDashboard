@@ -22,13 +22,11 @@ d3.csv("entities.csv").then(function(data) {
 		picture.appendChild(img);
 		a.appendChild(picture);
 
-
 		var div = document.createElement("div");
 		div.className = "card-content";
 
 		var h2 = document.createElement("H2");
 		h2.innerHTML = (i+1).toString() + ". " + data[i].EntityName;
-
 
 		var h4 = document.createElement("H4");
 		h4.innerHTML = "Infegy Trust Score: " + data[i].trustMetric + "<br>Post Volume: " + data[i].totalDocuments

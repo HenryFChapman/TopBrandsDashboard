@@ -14,7 +14,6 @@ d3.csv("entities.csv").then(function(data) {
 			document.getElementsByTagName("p")[0].innerHTML = data[i].WikiDescrip;
 			document.getElementsByTagName("h4")[0].innerHTML = "Infegy Trust Score: " + data[i].trustMetric + "<br>Post Volume: " + data[i].totalDocuments
 
-
 			document.getElementsByTagName("h2")[1].innerHTML = myParam + " Post Volume";
 			document.getElementsByTagName("h2")[2].innerHTML = myParam + " Net Sentiment";
 			document.getElementsByTagName("h2")[3].innerHTML = myParam + " Top Topics";

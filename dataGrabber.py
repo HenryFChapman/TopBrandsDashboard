@@ -297,35 +297,35 @@ def main():
 		print(row['EntityName'])
 		query = createQuery(row['EntityCode'], "week")
 
-		#volumeData = getData(query, "volume", 50)
-		#totalVolume = parseVolume(row['EntityName'], volumeData)
+		volumeData = getData(query, "volume", 50)
+		totalVolume = parseVolume(row['EntityName'], volumeData)
 
-		#sentimentData = getData(query, "sentiment", 50)
-		#parseSentiment(row['EntityName'], sentimentData)
+		sentimentData = getData(query, "sentiment", 50)
+		parseSentiment(row['EntityName'], sentimentData)
 
-		#query = createQuery(row['EntityCode'], "year")
-		#emotionData = getData(query, "emotions", 50)
+		query = createQuery(row['EntityCode'], "year")
+		emotionData = getData(query, "emotions", 50)
 
 		topicData = getData(query, "topics", 50)
 		parseTopics(row['EntityName'], topicData)
 		parseLinks(row['EntityName'], topicData)
 
-		#trustSentences.append(parseEmotions(row['EntityName'], emotionData)[0])
-		#totalDocuments.append(totalVolume)
+		trustSentences.append(parseEmotions(row['EntityName'], emotionData)[0])
+		totalDocuments.append(totalVolume)
 
-		#oneSentence.append(split_into_sentences(row['WikiDescrip'])[0])
+		oneSentence.append(split_into_sentences(row['WikiDescrip'])[0])
 
-	#entities['oneSentence'] = oneSentence
-	#entities['trustMetric'] = trustSentences
-	#entities['totalDocuments'] = totalDocuments
+	entities['oneSentence'] = oneSentence
+	entities['trustMetric'] = trustSentences
+	entities['totalDocuments'] = totalDocuments
 
-	#entities = entities.sort_values(by='trustMetric', ascending = False)
+	entities = entities.sort_values(by='trustMetric', ascending = False)
 
-	#entities['trustMetric'] = entities['trustMetric'].astype(str)+"%"
+	entities['trustMetric'] = entities['trustMetric'].astype(str)+"%"
 
-	#entities['totalDocuments'] = entities['totalDocuments'].astype(int).map('{:,d}'.format)
+	entities['totalDocuments'] = entities['totalDocuments'].astype(int).map('{:,d}'.format)
 
-	#entities.to_csv("entities.csv")
+	entities.to_csv("entities.csv")
 
 main()
 
