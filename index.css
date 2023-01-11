@@ -5,7 +5,7 @@
 
 /* Card Based Layout - Base styles */
 body {
-  background: white;
+  background: linear-gradient(to right, #22AAFF, #EE44EE);
   box-sizing: border-box;
   padding-right:25px;
   padding-left:25px;
@@ -37,7 +37,7 @@ h6 {
 
 h2 {
   font-size: 1.5rem;
-  color: #205080;
+  color: #005184;
 }
 
 p {
@@ -122,36 +122,33 @@ big {
 }
 
 .masthead {
-  background: linear-gradient(to right, #A279F7, #6BD7DC);
-  border: 1px solid lightgrey;
+
+  background: linear-gradient(to right, #22AAFF, #EE44EE);
   border-radius:1em;
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .masthead p, .masthead p a {
   color: white;
   margin: 5px;
-  padding:10px;
-  padding-left:40px;
 }
 
 .site-title h1 {
   color: white;
-  margin: 10px;
+  margin: 4px;
   position: relative;
-  padding-left:36px;
 }
 
 .site-title img {
-  float: left;
   height: 100px;
-  padding:15px;
+  margin: -30px;
+  padding-bottom:20px;
+  padding-top:5px;
 }
 
 .header h1 {
   position: relative;
   top: 18px;
-  left: 10px;
 }
 
 .card img {
