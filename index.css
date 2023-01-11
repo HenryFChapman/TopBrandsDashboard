@@ -5,7 +5,7 @@
 
 /* Card Based Layout - Base styles */
 body {
-  background: #eeeeee;
+  background: white;
   box-sizing: border-box;
   padding-right:25px;
   padding-left:25px;
@@ -122,8 +122,8 @@ big {
 }
 
 .masthead {
-  background-image: linear-gradient(to right, #005184, #22AAFF);
-  border: 1px solid #205080;
+  background: linear-gradient(to right, #A279F7, #6BD7DC);
+  border: 1px solid lightgrey;
   border-radius:1em;
   margin-top: 10px;
 }
@@ -216,7 +216,8 @@ big {
   flex: 0 1 24%;
   border-radius:1em;
   transition: all .2s ease-in-out;
-  border: 1px solid #205080;
+  border: 1px solid lightgrey;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 
 
