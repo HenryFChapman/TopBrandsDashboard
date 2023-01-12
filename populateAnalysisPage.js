@@ -2,8 +2,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 const myParam = decodeURI(urlParams.get('company').replace("*", "&"));
 
-//history.pushState(null, null, myParam);
-
 //Replace Flavor Text With Description
 d3.csv("entities.csv").then(function(data) {
 
@@ -19,7 +17,6 @@ d3.csv("entities.csv").then(function(data) {
 			document.getElementsByTagName("h2")[3].innerHTML = myParam + " Top Topics";
 			document.getElementsByTagName("h2")[4].innerHTML = myParam + " Narratives";
 
-
 			var tempCard = document.getElementsByClassName("analysisCard")[0];
 
 			var img = document.createElement("img");
@@ -32,7 +29,6 @@ d3.csv("entities.csv").then(function(data) {
 
 			tempCard.appendChild(picture);
 		}
-
 	}
 }).catch(function(error) {
 	console.log(error);
@@ -45,19 +41,24 @@ d3.csv("data/volume/"+myParam+".csv").then(function(data) {
 
 	for (var i = 0; i< data.length; i++) {
 
-		dates[i] = data[i].Date.split('T')[0];
+		dates[i] = data[i].Date;
 		volumes[i] = data[i].Universe;
 	}
 
+
+
+	"#846FC6"
 	//This Section Does Post Volume Graph
 	var data1 = {
 		labels: dates,
 		datasets: [{
-			label: "Post Volume",
-			backgroundColor: "#846FC6",
+			label: "Sentiment",
+			backgroundColor: "white",
 			borderColor: "#846FC6",
+			pointStyle: 'circle',
 			borderWidth: 2,
 			data: volumes,
+			lineTension: 0.3,
 		}]
 	};
 
@@ -69,24 +70,46 @@ d3.csv("data/volume/"+myParam+".csv").then(function(data) {
 				display: false
 			},
 		},
+		responsive: true,
 		scales: {
-			yAxes: [{
-				stacked: true,
-				gridLines: {
-					display: false,
-					color: "#000000"
+			x: {
+				grid: {
+					drawOnChartArea:false,
+					tickMarkLength: 0, 
 				},
-				scaleLabel: {
+				ticks: {
+					maxRotation: 0,
+					minRotation: 0,
+					autoSkip : true,
+					color: "darkgrey",
+
+					//callback: function(label, index, labels){
+					//	if (label == 0){
+					//		return "January 1st, 2022"
+					//	} else if (label == 11) {
+					//		return "December 1st, 2022"
+					//	} else {
+					//		return ""
+					//	}
+					//}
+				},
+			},
+			y: {
+				grid: {
+					drawOnChartArea:false
+				},
+				ticks: {
+					maxTicksLimit: 4,
+					maxRotation: 0,
+					minRotation: 0,
+					color: "darkgrey",
+				},
+				title: {
 					display: true,
-					labelString: 'Post Volume'
+					text: 'Number of Posts',
+					color: "darkgrey"
 				}
-			}],
-			xAxes: [{
-				gridLines: {
-					display: false,
-					color: "#000000"
-				},
-			}]
+			}
 		}
 	};
 
@@ -101,15 +124,15 @@ d3.csv("data/volume/"+myParam+".csv").then(function(data) {
 
 d3.csv("data/sentiment/"+myParam+".csv").then(function(data) {
 
-	posColour = "#75C0B37A"
-	negColour = 'rgba(255, 0, 0, .1)'
+	posColour = "#CBE09D"
+	negColour = '#E5BFB9'
 
 	var dates = new Array(data.length);
 	var volumes = new Array(data.length);
 
 	for (var i = 0; i< data.length; i++) {
 
-		dates[i] = data[i].Date.split('T')[0];
+		dates[i] = data[i].Date;
 		volumes[i] = data[i]['Net Sentiment'];
 	}
 
@@ -118,10 +141,15 @@ d3.csv("data/sentiment/"+myParam+".csv").then(function(data) {
 		labels: dates,
 		datasets: [{
 			label: "Sentiment",
-			backgroundColor: "#2D4F7C",
-			borderColor: "#2D4F7C",
-			borderWidth: 2,
+			backgroundColor: "white",
+			borderColor(context) {
+				const index = context.dataIndex
+				const value = context.dataset.data[index]
+				return value < 0 ? '#DFC0BA' : '#CFDFA4'
+			},
+			pointStyle: 'circle',
 			data: volumes,
+			lineTension: 0.3,
 			fill: {
 				target: 'origin',
 				above: posColour,
@@ -138,29 +166,71 @@ d3.csv("data/sentiment/"+myParam+".csv").then(function(data) {
 				display: false
 			},
 		},
+		responsive: true,
 		scales: {
-			yAxes: [{
-				stacked: true,
-				gridLines: {
-					display: false,
-					color: "#000000"
+			x: {
+				grid: {
+					drawOnChartArea:false,
+					tickMarkLength: 0, 
 				},
-				scaleLabel: {
+				ticks: {
+					maxRotation: 0,
+					minRotation: 0,
+					autoSkip : true,
+					color: "darkgrey",
+
+					//callback: function(label, index, labels){
+					//	if (label == 0){
+					//		return "January 1st, 2022"
+					//	} else if (label == 11) {
+					//		return "December 1st, 2022"
+					//	} else {
+					//		return ""
+					//	}
+					//}
+				},
+			},
+			y: {
+				grid: {
+					drawOnChartArea:false
+				},
+				ticks: {
+					maxTicksLimit: 4,
+					maxRotation: 0,
+					minRotation: 0,
+					color: "darkgrey",
+				},
+				suggestedMin: -1,
+				suggestedMax: 1,
+				title: {
 					display: true,
-					labelString: 'Post Volume'
+					text: 'Net Sentiment',
+					color: "darkgrey"
 				}
-			}],
-			xAxes: [{
-				gridLines: {
-					display: false,
-					color: "#000000"
-				},
-			}]
+			}
 		}
 	};
 
+	const threshold = 0;
+
 	var graph = new Chart('chart-2', {
 		type: 'line',
+		plugins: [{
+			afterLayout: chart => {
+				let ctx = chart.ctx;
+				ctx.save();
+				let yAxis = chart.scales.y;
+				let yThreshold = yAxis.getPixelForValue(threshold);
+				let gradient = ctx.createLinearGradient(0, yAxis.top, 0, yAxis.bottom);
+				gradient.addColorStop(0, '#8FC23D');
+				let offset = 1 / yAxis.bottom * yThreshold;
+				gradient.addColorStop(offset, '#8FC23D');
+				gradient.addColorStop(offset, '#DB314E');
+				gradient.addColorStop(1, '#DB314E');
+				chart.data.datasets[0].borderColor = gradient;
+				ctx.restore();
+			}
+		}],
 		options: options1,
 		data: data1, 
 	});
@@ -174,9 +244,7 @@ d3.csv("data/topics/"+myParam+".csv").then(function(data) {
 	var posRate = new Array(data.Topic);
 	var colors = new Array(data.Topic);
 
-
 	for (var i = 0; i< 10; i++) {
-
 		myWords[i] = data[i].Topic;
 		posRate[i] = data[i]['documents'];
 		colors[i] = data[i]['colors'];
@@ -188,7 +256,6 @@ d3.csv("data/topics/"+myParam+".csv").then(function(data) {
 		datasets: [{
 			label: "Number of Documents Containing Topic",
 			backgroundColor: colors,
-			borderWidth: 2,
 			data: posRate,
 		}]
 	};
@@ -201,24 +268,32 @@ d3.csv("data/topics/"+myParam+".csv").then(function(data) {
 				display: false
 			},
 		},
+		responsive: true,
 		scales: {
-			yAxes: [{
-				stacked: true,
-				gridLines: {
-					display: false,
-					color: "#000000"
+			x: {
+				grid: {
+					drawOnChartArea:false
 				},
-				scaleLabel: {
-					display: true,
-					labelString: 'Post Volume'
+				ticks: {
+					color: "darkgrey"
 				}
-			}],
-			xAxes: [{
-				gridLines: {
-					display: false,
-					color: "#000000"
+			},
+			y: {
+				grid: {
+					drawOnChartArea:false
 				},
-			}]
+				ticks: {
+					maxTicksLimit: 4,
+					maxRotation: 0,
+					minRotation: 0,
+					color: "darkgrey"
+				},
+				title: {
+					display: true,
+					text: 'Number of Posts',
+					color: "darkgrey"
+				}
+			}
 		}
 	};
 
@@ -265,7 +340,6 @@ fetch("data/networks/"+myParam+".json").then(res => res.json()).then(data => {
 				ctx.fillStyle = "#2d333a";
 				ctx.fillText(label, node.x, node.y + 20);
 			}
-
 		})
 
 		graph.d3Force('charge', d3.forceManyBody().strength(-60));
@@ -307,7 +381,6 @@ fetch("data/networks/"+myParam+".json").then(res => res.json()).then(data => {
 	graph.d3Force('gravity-x', d3.forceX(window.innerWidth / 2).strength(0.1));
 	graph.d3Force('gravity-y', d3.forceY(window.innerHeight / 2).strength(0.1));
 	graph.d3Force('collide', d3.forceCollide(graph.nodeRelSize()));
-
 	graph.linkColor(() => "#D3D3D3");
 });
 

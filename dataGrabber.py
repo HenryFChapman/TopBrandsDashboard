@@ -55,7 +55,12 @@ def parseVolume(name, data):
 		posts_universe.append(point['posts_universe'])
 
 	volumeData['Date'] = date
+	volumeData['Date'] = pd.to_datetime(volumeData['Date'])
+	volumeData['Date'] = volumeData['Date'].dt.strftime('%b \'%y')
+
 	volumeData['Universe'] = posts_universe
+
+	volumeData['Universe'] = volumeData['Universe'].astype(int)
 
 	totalVolume = volumeData['Universe'].sum()
 
@@ -75,6 +80,9 @@ def parseSentiment(name, data):
 		posts_universe.append(point['net_sentiment'])
 
 	volumeData['Date'] = date
+	volumeData['Date'] = pd.to_datetime(volumeData['Date'])
+	volumeData['Date'] = volumeData['Date'].dt.strftime('%b \'%y')
+
 	volumeData['Net Sentiment'] = posts_universe
 
 	volumeData.to_csv("data/sentiment/" + name + ".csv")
@@ -90,8 +98,7 @@ def parseTopics(name, data):
 	appearances = []
 	colors = []
 
-	cmap = matplotlib.cm.get_cmap('Greens')
-
+	cmap = matplotlib.colors.LinearSegmentedColormap.from_list("", ["#ccff66", "#669900"])
 
 	for topic in data:
 		names.append(topic['name'])
@@ -112,14 +119,14 @@ def parseTopics(name, data):
 
 	topicData = topicData.sort_values(by = 'documents', ascending = False)
 
-	topicData = topicData.head(15)
+	topicData = topicData.head(10)
+
+	topicData = topicData[['Topic', 'documents', 'colors']]
 
 	topicData.to_csv("data/topics/" + name + ".csv")
 
 
 def parseLinks(name, data):
-
-
 
 	#Handles Links
 	links = []
@@ -150,7 +157,6 @@ def parseLinks(name, data):
 		tempNode = dict()
 		tempNode['name'] = topic['topic']
 		tempNode['id'] = topic['key']
-		tempNode['score'] = topic['score']
 
 		if "cluster_id" not in topic.keys():
 			tempNode['cluster_id'] = -1
@@ -164,7 +170,6 @@ def parseLinks(name, data):
 			tempNode = dict()
 			tempNode['name'] = relatedTopic['name']
 			tempNode['id'] = relatedTopic['key']
-			tempNode['score'] = relatedTopic['score']
 
 			if "cluster_id" not in topic.keys():
 				tempNode['cluster_id'] = -1
@@ -205,6 +210,9 @@ def parseLinks(name, data):
 
 	nodeDF['mainLabel'] = mainLabels
 	nodeDF = nodeDF.sort_values(by=['degree'], ascending = True).fillna(0)
+
+	nodeDF = nodeDF[['name', 'id', 'cluster_id', 'mainLabel']]
+
 	nodes = nodeDF.to_dict('records')
 
 	graphJSON = {}
@@ -224,13 +232,13 @@ def parseEmotions(name, data):
 
 	for emotion in emotions:
 		if emotion['name'] == 'trust':
-			trust = emotion['documents']
+			positiveDocuments = emotion['positive_documents']
+			totalDocuments = emotion['documents']
+			percentPositiveDocuments = positiveDocuments/totalDocuments
 
-	trustPercentage = trust/totalDocuments
+			trust = emotion['documents'] * percentPositiveDocuments
 
-	trustString = round(trustPercentage*100, 2)
-
-	return trustString, totalDocuments
+	return trust, totalDocuments
 
 
 #Calling Function that Identifies a query + target endpoint and returns a dataframe
@@ -295,7 +303,7 @@ def main():
 
 	for i, row in entities.iterrows():
 		print(row['EntityName'])
-		query = createQuery(row['EntityCode'], "week")
+		query = createQuery(row['EntityCode'], "month")
 
 		volumeData = getData(query, "volume", 50)
 		totalVolume = parseVolume(row['EntityName'], volumeData)
@@ -306,7 +314,7 @@ def main():
 		query = createQuery(row['EntityCode'], "year")
 		emotionData = getData(query, "emotions", 50)
 
-		topicData = getData(query, "topics", 50)
+		topicData = getData(query, "topics", 20)
 		parseTopics(row['EntityName'], topicData)
 		parseLinks(row['EntityName'], topicData)
 
@@ -321,8 +329,7 @@ def main():
 
 	entities = entities.sort_values(by='trustMetric', ascending = False)
 
-	entities['trustMetric'] = entities['trustMetric'].astype(str)+"%"
-
+	entities['trustMetric'] = entities['trustMetric'].astype(int).map('{:,d}'.format)
 	entities['totalDocuments'] = entities['totalDocuments'].astype(int).map('{:,d}'.format)
 
 	entities.to_csv("entities.csv")
