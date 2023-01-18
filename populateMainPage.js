@@ -3,11 +3,8 @@ dataForAnalysis = {};
 
 window.onpopstate=function()
 {
-
 	window.location.replace('https://www.infegy.com/infegys-top-trusted-brands');
-
 }
-
 
 function makeTopicGraph(topics) {
 
@@ -363,8 +360,7 @@ function populateMainCards() {
 
 	window.location.pathname.split("/").pop()
 
-
-	d3.json("https://www.infegy.com/hubfs/Most%20Trusted%20Brands%202023/siteData.json").then(function(data) {
+	fetch("https://www.infegy.com/hubfs/Most%20Trusted%20Brands%202023/siteData.json").then(response => {return response.json();}).then(data => {
 
 		dataForAnalysis = data;
 

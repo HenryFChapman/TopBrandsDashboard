@@ -1,204 +1,204 @@
 <!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swaps" rel="stylesheet">
 
-<script>
+<style>
   /* Import the google web fonts you want to use */
-  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 /* Card Based Layout - Base styles */
-  body {
-    box-sizing: border-box;
-    background: linear-gradient(to right, #22AAFF, #EE44EE);
-  }
+body {
+  box-sizing: border-box;
+  background: linear-gradient(to right, #22AAFF, #EE44EE);
+}
 
 /*--------------------------------------------------------------
 Typography
 --------------------------------------------------------------*/
-  body,
-  button,
-  input,
-  select,
-  textarea {
-    color: #404040;
-    font-family: 'Roboto', sans-serif;
-    font-size: 18px;
-    line-height: 1.5;
-  }
+body,
+button,
+input,
+select,
+textarea {
+  color: #404040;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    clear: both;
-    font-family: 'Roboto', serif;
-  }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  clear: both;
+  font-family: 'Roboto', serif;
+}
 
-  h2 {
-    font-size: 1.5rem;
-    color: #005184;
-  }
+h2 {
+  font-size: 1.5rem;
+  color: #005184;
+}
 
-  p {
-    margin-bottom: 1.5em;
-    color: #898989;
-  }
+p {
+  margin-bottom: 1.5em;
+  color: #898989;
+}
 
-  b,
-  strong {
-    font-weight: bold;
-  }
+b,
+strong {
+  font-weight: bold;
+}
 
-  dfn,
-  cite,
-  em,
-  i {
-    font-style: italic;
-  }
+dfn,
+cite,
+em,
+i {
+  font-style: italic;
+}
 
-  blockquote {
-    margin: 0 1.5em;
-  }
+blockquote {
+  margin: 0 1.5em;
+}
 
-  address {
-    margin: 0 0 1.5em;
-  }
+address {
+  margin: 0 0 1.5em;
+}
 
-  pre {
-    background: #84d;
-    font-family: Roboto, monospace;
-    font-size: 15px;
-    font-size: 1.5rem;
-    line-height: 1.6;
-    margin-bottom: 1.6em;
-    max-width: 100%;
-    overflow: auto;
-    padding: 1.6em;
-  }
+pre {
+  background: #84d;
+  font-family: Roboto, monospace;
+  font-size: 15px;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  margin-bottom: 1.6em;
+  max-width: 100%;
+  overflow: auto;
+  padding: 1.6em;
+}
 
-  code,
-  kbd,
-  tt,
-  var {
-    font: 15px Roboto, monospace;
-  }
+code,
+kbd,
+tt,
+var {
+  font: 15px Roboto, monospace;
+}
 
-  abbr,
-  acronym {
-    border-bottom: 1px dotted #666;
-    cursor: help;
-  }
+abbr,
+acronym {
+  border-bottom: 1px dotted #666;
+  cursor: help;
+}
 
-  mark,
-  ins {
-    background: #fff9c0;
-    text-decoration: none;
-  }
+mark,
+ins {
+  background: #fff9c0;
+  text-decoration: none;
+}
 
-  sup,
-  sub {
-    font-size: 75%;
-    height: 0;
-    line-height: 0;
-    position: relative;
-    vertical-align: baseline;
-  }
+sup,
+sub {
+  font-size: 75%;
+  height: 0;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
 
-  sup {
-    bottom: 1ex;
-  }
+sup {
+  bottom: 1ex;
+}
 
-  sub {
-    top: .5ex;
-  }
+sub {
+  top: .5ex;
+}
 
-  small {
-    font-size: 75%;
-  }
+small {
+  font-size: 75%;
+}
 
-  big {
-    font-size: 125%;
-  }
+big {
+  font-size: 125%;
+}
 
-  .masthead {
+.masthead {
 
-    background: linear-gradient(to right, #22AAFF, #EE44EE);
-    border-radius:1em;
-    margin-top: 10px;
-  }
+  background: linear-gradient(to right, #22AAFF, #EE44EE);
+  border-radius:1em;
+  margin-top: 10px;
+}
 
-  .masthead p, .masthead p a {
-    color: white;
-    margin: 5px;
-  }
+.masthead p, .masthead p a {
+  color: white;
+  margin: 5px;
+}
 
-  .site-title h1 {
-    color: white;
-    margin: 4px;
-    position: relative;
-  }
+.site-title h1 {
+  color: white;
+  margin: 4px;
+  position: relative;
+}
 
-  .site-title img {
-    height: 100px;
-    margin: -30px;
-    padding-bottom:20px;
-    padding-top:5px;
-  }
+.site-title img {
+  height: 100px;
+  margin: -30px;
+  padding-bottom:20px;
+  padding-top:5px;
+}
 
-  .header h1 {
-    position: relative;
-    top: 18px;
-  }
+.header h1 {
+  position: relative;
+  top: 18px;
+}
 
-  .card img {
-    display: block;
-    margin: auto;
-    margin-top: 10px;
+.card img {
+  display: block;
+  margin: auto;
+  margin-top: 10px;
 
-    border: 0;
-    height: 35px;
-    max-width: 300px;
-    text-align: center;
-  }
+  border: 0;
+  height: 35px;
+  max-width: 300px;
+  text-align: center;
+}
 
-  .card {
-    background: white;
-    margin-bottom: -5px;
-    margin-top: 10px;
-  }
+.card {
+  background: white;
+  margin-bottom: -5px;
+  margin-top: 10px;
+}
 
-  .card a {
-    color: black;
-    text-decoration: none;
-  }
+.card a {
+  color: black;
+  text-decoration: none;
+}
 
-  .card-content {
-    padding: 1.4em;
-  }
+.card-content {
+  padding: 1.4em;
+}
 
-  .card-content h2 {
-    margin-top: 0;
-    margin-bottom: .5em;
-    font-weight: bold;
-  }
+.card-content h2 {
+  margin-top: 0;
+  margin-bottom: .5em;
+  font-weight: bold;
+}
 
-  .card-content p {
-    font-size: 80%;
-  }
+.card-content p {
+  font-size: 80%;
+}
 
 /* Flexbox stuff */
-  .cards {
-   display: flex;
-   flex-wrap: wrap;
-   justify-content: space-between;
-   overflow: hidden;
-   border-radius: 10px;
-   gap: 1vw;
- }
+.cards {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: space-between;
+ overflow: hidden;
+ border-radius: 10px;
+ gap: 1vw;
+}
 
 
- @media screen  and (min-width: 0) and (max-width: 1024px) {
+@media screen  and (min-width: 0) and (max-width: 1024px) {
   .card {
     flex: 0 1 100% !important;
     flex-grow: 1;
@@ -243,12 +243,8 @@ Typography
 .chart-container-1 {
   height: 20rem;
   width: 100%;
-}
-
-
-
-</script>
-<script src="https://d3js.org/d3.v5.min.js"></script>
+}  
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.2/chart.min.js"></script>
 
 <head>
@@ -256,48 +252,45 @@ Typography
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 </head>
 
-<header class="masthead clear">
-  <div class="centered">
-    <div class="site-branding">
+  <header class="masthead clear">
+    <div class="centered">
+      <div class="site-branding">
 
-      <div class='site-title'>
-        <h1 class="site-title-text" onclick="returnToPage();">Infegy's Top Trusted Brands</h1>
-      </div>
+        <div class='site-title'>
+          <h1 class="site-title-text" onclick="returnToPage();">Infegy's Top Trusted Brands</h1>
+        </div>
 
-      <p><br>Infegy's Most Trusted Brands dashboard features a list of 100 global brands, ranked by their 2022 Infegy Trust score.<br><br><b>Methodology:</b><br>The 100 brands featured in this dashboard were sourced from Interbrand’s Best Global Brands 2022 report. Using our consumer intelligence platform, Infegy Atlas, we analyzed the online conversation around each brand using, and then ranked them by their Infegy Trust score.<br><br><b>Infegy Trust score:</b><br>Using proprietary Infegy AI and natural language processing, Infegy Atlas can accurately identify 10 emotions within online posts from every major social media channel. For the purposes of this interactive dashboard, the Trust Score is the total number of positive posts that express trust, limited to the 2022 conversation around each brand.<br><br>Click on the title of the dashboard to return to the main menu.</p>
+        <p><br>Infegy's Most Trusted Brands dashboard features a list of 100 global brands, ranked by their 2022 Infegy Trust score.<br><br><b>Methodology:</b><br>The 100 brands featured in this dashboard were sourced from Interbrand’s Best Global Brands 2022 report. Using our consumer intelligence platform, Infegy Atlas, we analyzed the online conversation around each brand using, and then ranked them by their Infegy Trust score.<br><br><b>Infegy Trust score:</b><br>Using proprietary Infegy AI and natural language processing, Infegy Atlas can accurately identify 10 emotions within online posts from every major social media channel. For the purposes of this interactive dashboard, the Trust Score is the total number of positive posts that express trust, limited to the 2022 conversation around each brand.<br><br>Click on the title of the dashboard to return to the main menu.<br><br></p>
 
-    </div><!-- .site-title -->
-  </div><!-- .centered -->
-</header><!-- .masthead -->
+      </div><!-- .site-title -->
+    </div><!-- .centered -->
+  </header><!-- .masthead -->
 
-<main class="main-area">
-  <div class="centered">
-    <section class="cards">
-    </section><!-- .cards -->
-  </div><!-- .centered -->
-</main>
+  <main class="main-area">
+    <div class="centered">
+      <section class="cards">
+      </section><!-- .cards -->
+    </div><!-- .centered -->
+  </main>
 
-<header class="masthead clear">
-  <div class="centered">
-    <div class="site-branding">
+  <header class="masthead clear">
+    <div class="centered">
+      <div class="site-branding">
 
-      <p>Dataset period: Jan 1, 2022 - Dec 31, 2022. Descriptions of brands and companies sourced from various online sources.</a> </p>
+        <p><br><br>Dataset period: Jan 1, 2022 - Dec 31, 2022. Descriptions of brands and companies sourced from various online sources.</a> </p>
 
-    </div><!-- .site-title -->
-  </div><!-- .centered -->
-</header><!-- .masthead -->
+      </div><!-- .site-title -->
+    </div><!-- .centered -->
+  </header><!-- .masthead -->
 
-<script>
-  
+  <script>
+    
 dataForAnalysis = {};
 
 window.onpopstate=function()
 {
-
   window.location.replace('https://www.infegy.com/infegys-top-trusted-brands');
-
 }
-
 
 function makeTopicGraph(topics) {
 
@@ -423,8 +416,8 @@ function makeSentimentGraph(sentiment) {
             style: 'percent'
           }
         },
-        suggestedMin: -100,
-        suggestedMax: 100,
+        suggestedMin: -1,
+        suggestedMax: 1,
         title: {
           display: true,
           text: 'Net Sentiment',
@@ -653,8 +646,7 @@ function populateMainCards() {
 
   window.location.pathname.split("/").pop()
 
-
-  d3.json("https://www.infegy.com/hubfs/Most%20Trusted%20Brands%202023/siteData.json").then(function(data) {
+  fetch("https://www.infegy.com/hubfs/Most%20Trusted%20Brands%202023/siteData.json").then(response => {return response.json();}).then(data => {
 
     dataForAnalysis = data;
 
@@ -728,6 +720,5 @@ function returnToPage() {
 
 populateMainCards();
 
-</script>
-
-
+    
+  </script>
