@@ -15,7 +15,6 @@ d3.csv("entities.csv").then(function(data) {
 			document.getElementsByTagName("h2")[1].innerHTML = myParam + " Post Volume";
 			document.getElementsByTagName("h2")[2].innerHTML = myParam + " Net Sentiment";
 			document.getElementsByTagName("h2")[3].innerHTML = myParam + " Top Topics";
-			document.getElementsByTagName("h2")[4].innerHTML = myParam + " Narratives";
 
 			var tempCard = document.getElementsByClassName("analysisCard")[0];
 
@@ -44,8 +43,6 @@ d3.csv("data/volume/"+myParam+".csv").then(function(data) {
 		dates[i] = data[i].Date;
 		volumes[i] = data[i].Universe;
 	}
-
-
 
 	"#846FC6"
 	//This Section Does Post Volume Graph
@@ -82,16 +79,6 @@ d3.csv("data/volume/"+myParam+".csv").then(function(data) {
 					minRotation: 0,
 					autoSkip : true,
 					color: "darkgrey",
-
-					//callback: function(label, index, labels){
-					//	if (label == 0){
-					//		return "January 1st, 2022"
-					//	} else if (label == 11) {
-					//		return "December 1st, 2022"
-					//	} else {
-					//		return ""
-					//	}
-					//}
 				},
 			},
 			y: {
@@ -178,16 +165,6 @@ d3.csv("data/sentiment/"+myParam+".csv").then(function(data) {
 					minRotation: 0,
 					autoSkip : true,
 					color: "darkgrey",
-
-					//callback: function(label, index, labels){
-					//	if (label == 0){
-					//		return "January 1st, 2022"
-					//	} else if (label == 11) {
-					//		return "December 1st, 2022"
-					//	} else {
-					//		return ""
-					//	}
-					//}
 				},
 			},
 			y: {
@@ -212,7 +189,6 @@ d3.csv("data/sentiment/"+myParam+".csv").then(function(data) {
 	};
 
 	const threshold = 0;
-
 	var graph = new Chart('chart-2', {
 		type: 'line',
 		plugins: [{
@@ -308,81 +284,6 @@ d3.csv("data/topics/"+myParam+".csv").then(function(data) {
 });
 
 
-fetch("data/networks/"+myParam+".json").then(res => res.json()).then(data => {
-
-	addEventListener("resize", (event) => {
-		const heightOutput = window.innerHeight;
-
-		const widthOutput = window.innerWidth;
-
-		const graph = ForceGraph()
-		(document.getElementById('chart-4'))
-		.graphData(data)
-		.nodeId('id')
-		.nodeVal('val')
-		.nodeLabel('name')
-		.nodeAutoColorBy('cluster_id')
-		.linkSource('source')
-		.linkTarget('target')
-		.enableZoomPanInteraction(false)
-		.width(widthOutput)
-		.height(heightOutput*.70)
-		.nodeCanvasObjectMode(() => "after")
-		.nodeCanvasObject((node, ctx, globalScale) => {
-
-			if (node.mainLabel != "No") {
-				label = node.name;
-
-				const fontSize = 15 / globalScale;
-				ctx.font = `${fontSize}px Sans-Serif`;
-				ctx.textAlign = "center";
-				ctx.textBaseline = "middle";
-				ctx.fillStyle = "#2d333a";
-				ctx.fillText(label, node.x, node.y + 20);
-			}
-		})
-
-		graph.d3Force('charge', d3.forceManyBody().strength(-60));
-		graph.d3Force('gravity-x', d3.forceX(window.innerWidth / 2).strength(0.1));
-		graph.d3Force('gravity-y', d3.forceY(window.innerHeight / 2).strength(0.1));
-		graph.d3Force('collide', d3.forceCollide(graph.nodeRelSize()));
-		graph.linkColor(() => "#D3D3D3");
-
-	});
-
-	const graph = ForceGraph()
-	(document.getElementById('chart-4'))
-	.graphData(data)
-	.nodeId('id')
-	.nodeVal('val')
-	.nodeLabel('name')
-	.nodeAutoColorBy('cluster_id')
-	.linkSource('source')
-	.linkTarget('target')
-	.enableZoomPanInteraction(false)
-	.height(window.innerHeight*.70)
-	.nodeCanvasObjectMode(() => "after")
-	.nodeCanvasObject((node, ctx, globalScale) => {
-
-		if (node.mainLabel != "No") {
-			label = node.name;
-
-			const fontSize = 15 / globalScale;
-			ctx.font = `${fontSize}px Sans-Serif`;
-			ctx.textAlign = "center";
-			ctx.textBaseline = "middle";
-			ctx.fillStyle = "#2d333a";
-			ctx.fillText(label, node.x, node.y + 20);
-		}
-
-	})
-
-	graph.d3Force('charge', d3.forceManyBody().strength(-60));
-	graph.d3Force('gravity-x', d3.forceX(window.innerWidth / 2).strength(0.1));
-	graph.d3Force('gravity-y', d3.forceY(window.innerHeight / 2).strength(0.1));
-	graph.d3Force('collide', d3.forceCollide(graph.nodeRelSize()));
-	graph.linkColor(() => "#D3D3D3");
-});
 
 
 

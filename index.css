@@ -1,14 +1,10 @@
 /* Import the google web fonts you want to use */
-
-
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 /* Card Based Layout - Base styles */
 body {
-  background: linear-gradient(to right, #22AAFF, #EE44EE);
   box-sizing: border-box;
-  padding-right:25px;
-  padding-left:25px;
+  background: linear-gradient(to right, #22AAFF, #EE44EE);
 }
 
 /*--------------------------------------------------------------
@@ -125,7 +121,7 @@ big {
 
   background: linear-gradient(to right, #22AAFF, #EE44EE);
   border-radius:1em;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .masthead p, .masthead p a {
@@ -198,7 +194,7 @@ big {
 }
 
 
-@media screen  and (min-width: 768px) and (max-width: 1024px) {
+@media screen  and (min-width: 0) and (max-width: 1024px) {
   .card {
     flex: 0 1 100% !important;
     flex-grow: 1;
@@ -217,29 +213,26 @@ big {
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 
-
 .analysisContainer {
   display: flex;
   flex-wrap: wrap;
+  background: white;
+  border-radius:1em;
 }
 
 .analysisCard {
-
   flex-basis: 50%;
   flex-grow: 1;
   width: 100%;
-
 }
 
 .analysisCard img {
   display: block;
   margin: auto;
   margin-bottom: 10px;
-
+  height: 35px;
+  max-width: 300px;
   border: 0;
-  height: 100px;
-  max-width: 600px;
-  max-height: 100%;
   text-align: center;
 }
 
@@ -247,11 +240,5 @@ big {
   height: 20rem;
   width: 100%;
 }
-
-.my_dataviz {
-  width: 300%;
-}
-
-
 
 

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swaps" rel="stylesheet">
+
+<style>
+/* Import the google web fonts you want to use */
+
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+/* Card Based Layout - Base styles */
+body {
+  box-sizing: border-box;
+  padding-right:25px;
+  padding-left:25px;
+}
+
+.wrapper {
+  background: linear-gradient(to right, #22AAFF, #EE44EE);
+  padding:25px;
+}
+
+/*--------------------------------------------------------------
+Typography
+--------------------------------------------------------------*/
+body,
+button,
+input,
+select,
+textarea {
+  color: #404040;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  clear: both;
+  font-family: 'Roboto', serif;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: #005184;
+}
+
+p {
+  margin-bottom: 1.5em;
+  color: #898989;
+}
+
+b,
+strong {
+  font-weight: bold;
+}
+
+dfn,
+cite,
+em,
+i {
+  font-style: italic;
+}
+
+blockquote {
+  margin: 0 1.5em;
+}
+
+address {
+  margin: 0 0 1.5em;
+}
+
+pre {
+  background: #84d;
+  font-family: Roboto, monospace;
+  font-size: 15px;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  margin-bottom: 1.6em;
+  max-width: 100%;
+  overflow: auto;
+  padding: 1.6em;
+}
+
+code,
+kbd,
+tt,
+var {
+  font: 15px Roboto, monospace;
+}
+
+abbr,
+acronym {
+  border-bottom: 1px dotted #666;
+  cursor: help;
+}
+
+mark,
+ins {
+  background: #fff9c0;
+  text-decoration: none;
+}
+
+sup,
+sub {
+  font-size: 75%;
+  height: 0;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  bottom: 1ex;
+}
+
+sub {
+  top: .5ex;
+}
+
+small {
+  font-size: 75%;
+}
+
+big {
+  font-size: 125%;
+}
+
+.masthead {
+
+  background: linear-gradient(to right, #22AAFF, #EE44EE);
+  border-radius:1em;
+  margin-top: 10px;
+}
+
+.masthead p, .masthead p a {
+  color: white;
+  margin: 5px;
+}
+
+.site-title h1 {
+  color: white;
+  margin: 4px;
+  position: relative;
+}
+
+.site-title img {
+  height: 100px;
+  margin: -30px;
+  padding-bottom:20px;
+  padding-top:5px;
+}
+
+.header h1 {
+  position: relative;
+  top: 18px;
+}
+
+.card img {
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+
+  border: 0;
+  height: 35px;
+  max-width: 300px;
+  text-align: center;
+}
+
+.card {
+  background: white;
+  margin-bottom: -5px;
+  margin-top: 10px;
+}
+
+.card a {
+  color: black;
+  text-decoration: none;
+}
+
+.card-content {
+  padding: 1.4em;
+}
+
+.card-content h2 {
+  margin-top: 0;
+  margin-bottom: .5em;
+  font-weight: bold;
+}
+
+.card-content p {
+  font-size: 80%;
+}
+
+/* Flexbox stuff */
+.cards {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: space-between;
+ overflow: hidden;
+ border-radius: 10px;
+ gap: 1vw;
+}
+
+
+@media screen  and (min-width: 2px) and (max-width: 1024px) {
+  .card {
+    flex: 0 1 100% !important;
+    flex-grow: 1;
+  } 
+
+  .cards {
+    display: flex;
+  }   
+}
+
+.card {
+  flex: 0 1 24%;
+  border-radius:1em;
+  transition: all .2s ease-in-out;
+  border: 1px solid lightgrey;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+.analysisContainer {
+  display: flex;
+  flex-wrap: wrap;
+  background: white;
+  border-radius:1em;
+}
+
+.analysisCard {
+
+
+  flex-basis: 50%;
+  flex-grow: 1;
+  width: 100%;
+
+}
+
+.analysisCard img {
+  display: block;
+  margin: auto;
+  margin-bottom: 10px;
+
+  height: 35px;
+  max-width: 300px;
+
+  border: 0;
+
+  text-align: center;
+}
+
+.chart-container-1 {
+  height: 20rem;
+  width: 100%;
+}
+
+.my_dataviz {
+  width: 300%;
+}
+
+
+
+
+
+
+
+</style>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.2/chart.min.js"></script>
+
+<head>
+  <title>Infegy's Most Trusted Brands of 2022</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+</head>
+
+<div class="wrapper">
+
+  <header class="masthead clear">
+    <div class="centered">
+      <div class="site-branding">
+
+        <div class='site-title'>
+          <h1 class="site-title-text" onclick="returnToPage();">Infegy's Top Trusted Brands</h1>
+        </div>
+
+        <p>Infegy's top brands dashboard is a tool that allows users to track and analyze the performance of the world's top brands. The data for the dashboard is sourced from Interbrand, a leading global brand consultancy that produces annual rankings of the world's most valuable brands. <br><br> We use natural language processing techniques to analyze the words and phrases used online to make predictions about the emotions that the text is likely to evoke in a reader. We do this by training machine learning algorithms on large datasets of text that have been labeled with emotional tags, like "trust." The AI system can then use this training to analyze new text and predict the emotions that it is likely to evoke in a reader. These were the brands with the highest annual Trust Score, or the brands with the highest percentage of online posts containing trust.<br><br>Click the site title to return to the main page!</p>
+
+      </div><!-- .site-title -->
+    </div><!-- .centered -->
+  </header><!-- .masthead -->
+
+  <main class="main-area">
+    <div class="centered">
+      <section class="cards">
+      </section><!-- .cards -->
+    </div><!-- .centered -->
+  </main>
+
+  <header class="masthead clear">
+    <div class="centered">
+      <div class="site-branding">
+
+        <p>Brands were sourced from Interbrand's Top 2022 Global Brands Report. Descriptions of brands and companies were sourced from Wikipedia descriptions.</a> </p>
+
+      </div><!-- .site-title -->
+    </div><!-- .centered -->
+  </header><!-- .masthead -->
+
+</div>
+
+
+<script>
+
+dataForAnalysis = {};
+
+window.onpopstate=function()
+{
+
+  if (window.location.href != 'https://www.infegy.com/infegys-top-trusted-brands/') {
+    window.location.replace('https://www.infegy.com/infegys-top-trusted-brands/');
+  }
+
+}
+
+
+function makeTopicGraph(topics) {
+
+  var myWords = topics['Topic'];
+  var posRate = topics['documents'];
+  var colors = topics['colors'];
+
+  //This Section Does Post Volume Graph
+  var data1 = {
+    labels: myWords,
+    datasets: [{
+      label: "Number of Documents Containing Topic",
+      backgroundColor: colors,
+      data: posRate,
+    }]
+  };
+
+  var options1 = {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        grid: {
+          drawOnChartArea:false
+        },
+        ticks: {
+          color: "darkgrey"
+        }
+      },
+      y: {
+        grid: {
+          drawOnChartArea:false
+        },
+        ticks: {
+          maxTicksLimit: 4,
+          maxRotation: 0,
+          minRotation: 0,
+          color: "darkgrey"
+        },
+        title: {
+          display: true,
+          text: 'Number of Posts',
+          color: "darkgrey"
+        }
+      }
+    }
+  };
+
+  var graph = new Chart('chart-3', {
+    type: 'bar',
+    data: data1,
+    options: options1,
+  });
+}
+
+function makeSentimentGraph(sentiment) {
+  posColour = "#CBE09D"
+  negColour = '#E5BFB9'
+
+  var dates = sentiment['Date'];
+  var volumes = sentiment['Net Sentiment'];
+
+  //This Section Does Post Volume Graph
+  var data1 = {
+    labels: dates,
+    datasets: [{
+      label: "Sentiment",
+      backgroundColor: "white",
+      borderColor(context) {
+        const index = context.dataIndex
+        const value = context.dataset.data[index]
+        return value < 0 ? '#DFC0BA' : '#CFDFA4'
+      },
+      pointStyle: 'circle',
+      data: volumes,
+      lineTension: 0.3,
+      fill: {
+        target: 'origin',
+        above: posColour,
+        below: negColour
+      }
+    }]
+  };
+
+  var options1 = {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        grid: {
+          drawOnChartArea:false,
+          tickMarkLength: 0, 
+        },
+        ticks: {
+          maxRotation: 0,
+          minRotation: 0,
+          autoSkip : true,
+          color: "darkgrey",
+        },
+      },
+      y: {
+        grid: {
+          drawOnChartArea:false
+        },
+        ticks: {
+          maxTicksLimit: 4,
+          maxRotation: 0,
+          minRotation: 0,
+          color: "darkgrey",
+        },
+        suggestedMin: -1,
+        suggestedMax: 1,
+        title: {
+          display: true,
+          text: 'Net Sentiment',
+          color: "darkgrey"
+        }
+      }
+    }
+  };
+
+  const threshold = 0;
+  var graph = new Chart('chart-2', {
+    type: 'line',
+    plugins: [{
+      afterLayout: chart => {
+        let ctx = chart.ctx;
+        ctx.save();
+        let yAxis = chart.scales.y;
+        let yThreshold = yAxis.getPixelForValue(threshold);
+        let gradient = ctx.createLinearGradient(0, yAxis.top, 0, yAxis.bottom);
+        gradient.addColorStop(0, '#8FC23D');
+        let offset = 1 / yAxis.bottom * yThreshold;
+        gradient.addColorStop(offset, '#8FC23D');
+        gradient.addColorStop(offset, '#DB314E');
+        gradient.addColorStop(1, '#DB314E');
+        chart.data.datasets[0].borderColor = gradient;
+        ctx.restore();
+      }
+    }],
+    options: options1,
+    data: data1, 
+  });
+
+}
+
+function makePostVolumeGraph(volume) {
+  var dates = volume['Date'];
+  var volumes = volume['Universe'];
+
+  "#846FC6"
+  //This Section Does Post Volume Graph
+  var data1 = {
+    labels: dates,
+    datasets: [{
+      label: "Post Volume",
+      backgroundColor: "white",
+      borderColor: "#846FC6",
+      pointStyle: 'circle',
+      borderWidth: 2,
+      data: volumes,
+      lineTension: 0.3,
+    }]
+  };
+
+  var options1 = {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        grid: {
+          drawOnChartArea:false,
+          tickMarkLength: 0, 
+        },
+        ticks: {
+          maxRotation: 0,
+          minRotation: 0,
+          autoSkip : true,
+          color: "darkgrey",
+        },
+      },
+      y: {
+        grid: {
+          drawOnChartArea:false
+        },
+        ticks: {
+          maxTicksLimit: 4,
+          maxRotation: 0,
+          minRotation: 0,
+          color: "darkgrey",
+        },
+        title: {
+          display: true,
+          text: 'Number of Posts',
+          color: "darkgrey"
+        }
+      }
+    }
+  };
+
+  var graph = new Chart('chart-1', {
+    type: 'line',
+    options: options1,
+    data: data1
+  });
+}
+
+
+function clickHandler(brandName) {
+
+  window.scrollTo(0, 0)
+
+  window.history.pushState(null, null, "https://www.infegy.com/infegys-top-trusted-brands/" + brandName);
+
+  //Remove Old Cards
+  document.getElementsByClassName("cards")[0].remove();
+
+  //Add New Cards
+  var container = document.getElementsByClassName("centered")[1]
+  
+  //Create Section
+  var section = document.createElement("section");
+  section.className = "analysisContainer"
+  container.appendChild(section);
+
+  container = document.getElementsByClassName("analysisContainer")[0];
+
+  //Add Cards to Analysis Container
+  //Info Card
+  var infoCard = document.createElement("article");
+  infoCard.className = "analysisCard";
+
+  var cardContent = document.createElement("div");
+  cardContent.className = 'card-content';
+
+  var H2 = document.createElement("H2")
+  H2.innerHTML = brandName;
+
+  var P = document.createElement("p")
+  P.innerHTML = dataForAnalysis['entityHashMap'][brandName]['WikiDescrip'];
+
+  var H4 = document.createElement("H4")
+  H4.innerHTML = "Infegy Trust Score: " + dataForAnalysis['entityHashMap'][brandName]['trustMetric'] +  "<br> Post Volume: " + dataForAnalysis['entityHashMap'][brandName]['totalDocuments']
+
+  var img = document.createElement("img");
+  img.src = "https://www.infegy.com/hubfs/Most%20Trusted%20Brands%202023/logos/" + brandName.replace("'", "") + ".png";
+  img.alt = "Image";
+
+  picture = document.createElement("picture");
+  picture.className = "thumbnail";
+  picture.appendChild(img);
+
+  cardContent.appendChild(picture);
+  cardContent.appendChild(H2);
+  cardContent.appendChild(P);
+  cardContent.appendChild(H4);
+
+  infoCard.append(cardContent);
+  container.appendChild(infoCard);
+
+
+//This section of code makes the post volume chart!
+  var postVolumeCard = document.createElement("article");
+  postVolumeCard.className = "analysisCard";
+  var cardContent = document.createElement("div");
+  cardContent.className = 'card-content';
+  var H2 = document.createElement("H2");
+  H2.innerHTML = brandName + " Post Volume";
+  var P = document.createElement("p");
+  P.innerHTML = "Post volume shows how many social media users talked about this particular brand throughout the year.";
+  var chartContainer = document.createElement("div");
+  chartContainer.className = 'chart-container-1'
+  var canvas = document.createElement("canvas");
+  canvas.id = "chart-1";
+
+  chartContainer.append(canvas);
+  cardContent.appendChild(H2);
+  cardContent.appendChild(P);
+  cardContent.appendChild(chartContainer);
+  postVolumeCard.append(cardContent);
+  container.appendChild(postVolumeCard)
+
+//This section of code makes the sentiment chart!
+  var sentimentChart = document.createElement("article");
+  sentimentChart.className = "analysisCard";
+  cardContent = document.createElement("div");
+  cardContent.className = "card-content";
+  H2 = document.createElement("H2");
+  H2.innerHTML = brandName + " Net Sentiment";
+  P = document.createElement("p");
+  P.innerHTML = "Net sentiment shows how brand sentiment changed over time throughout the year. As positive events occured, the brand will show a higher percentage of brand sentiment, while when negative events occured, that sentiment average will drop.";
+  chartContainer = document.createElement("div");
+  chartContainer.className = 'chart-container-1'
+  canvas = document.createElement("canvas");
+  canvas.id = "chart-2";
+
+  chartContainer.append(canvas);
+  cardContent.appendChild(H2);
+  cardContent.appendChild(P);
+  cardContent.appendChild(chartContainer);
+  sentimentChart.append(cardContent);
+  container.appendChild(sentimentChart)
+
+  //This section of code makes the topics bar chart!
+  var topicChart = document.createElement("article");
+  topicChart.className = "analysisCard";
+  cardContent = document.createElement("div");
+  cardContent.className = "card-content";
+  H2 = document.createElement("H2");
+  H2.innerHTML = brandName + " Top Topics";
+  P = document.createElement("p");
+  P.innerHTML = "This shows frequently occuring phrases social media users mention when talking about a particular brand. Topics are colorized by sentiment with darker greens being more positive, and lighter greens being less positive.";
+  chartContainer = document.createElement("div");
+  chartContainer.className = 'chart-container-1'
+  canvas = document.createElement("canvas");
+  canvas.id = "chart-3";
+
+  chartContainer.append(canvas);
+  cardContent.appendChild(H2);
+  cardContent.appendChild(P);
+  cardContent.appendChild(chartContainer);
+  topicChart.append(cardContent);
+  container.appendChild(topicChart)
+
+  makePostVolumeGraph(dataForAnalysis['volume'][brandName]);
+  makeSentimentGraph(dataForAnalysis['sentiment'][brandName])
+  makeTopicGraph(dataForAnalysis['topics'][brandName])
+
+}
+
+function populateMainCards() {
+
+  window.location.pathname.split("/").pop()
+
+
+  d3.json("https://www.infegy.com/hubfs/Most%20Trusted%20Brands%202023/siteData.json").then(function(data) {
+
+    dataForAnalysis = data;
+
+    var entities = data.entities;
+
+   //data is an array of objects, with one object for each row in the CSV file
+    for (var i = 0; i < entities.length; i++) {
+
+      var container = document.getElementsByClassName("cards");
+
+    // Create some HTML elements for the cards
+      var tempCard = document.createElement("article");
+      tempCard.className = "card";
+
+      a = document.createElement("a");
+      tempCard.setAttribute("onclick",'clickHandler("'+entities[i].EntityName+'")');
+
+      picture = document.createElement("picture");
+      picture.className = "thumbnail";
+
+      var img = document.createElement("img");
+      img.src = "https://www.infegy.com/hubfs/Most%20Trusted%20Brands%202023/logos/" + entities[i].EntityName.replace("'", "") + ".png";
+      img.alt = entities[i].EntityName + ".png";
+      picture.appendChild(img);
+      a.appendChild(picture);
+
+      var div = document.createElement("div");
+      div.className = "card-content";
+
+      var h2 = document.createElement("H2");
+      h2.innerHTML = (i+1).toString() + ". " + entities[i].EntityName;
+
+      var h4 = document.createElement("H4");
+      h4.innerHTML = "Infegy Trust Score: " + entities[i].trustMetric + "<br>Post Volume: " + entities[i].totalDocuments
+
+      var p = document.createElement("P");
+      p.innerHTML = entities[i].oneSentence;
+
+      div.appendChild(h2);
+      div.appendChild(h4);
+      div.append(p);
+      a.appendChild(div);
+
+      tempCard.appendChild(a);
+      container[0].appendChild(tempCard);
+    }
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
+}
+
+function returnToPage() {
+
+  window.history.pushState(null, null, "https://www.infegy.com/infegys-top-trusted-brands/");
+
+  //Remove Old Cards
+  document.getElementsByClassName("analysisContainer")[0].remove();
+
+  //Add New Cards
+  var container = document.getElementsByClassName("centered")[1]
+  
+  //Create Section
+  var section = document.createElement("section");
+  section.className = "cards"
+  container.appendChild(section);
+
+  populateMainCards();
+
+}
+
+populateMainCards();
+
+  
+</script>

@@ -4,44 +4,9 @@ import json
 import sys
 import urllib
 import pandas as pd
-import re
 import matplotlib.cm
+from splitSentences import split_into_sentences
 
-def split_into_sentences(text):
-	alphabets= "([A-Za-z])"
-	prefixes = "(Mr|St|Mrs|Ms|Dr|Ing|h|c|F)[.]"
-	suffixes = "(Inc|Ltd|Jr|Sr|Co)"
-	starters = "(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
-	acronyms = "([A-Z][.][A-Z][.](?:[A-Z][.])?)"
-	websites = "[.](com|net|org|io|gov)"
-	digits = "([0-9])"
-
-	text = " " + text + "  "
-	text = text.replace("\n"," ")
-	text = re.sub(prefixes,"\\1<prd>",text)
-	text = re.sub(websites,"<prd>\\1",text)
-	text = re.sub(digits + "[.]" + digits,"\\1<prd>\\2",text)
-	if "..." in text: text = text.replace("...","<prd><prd><prd>")
-	if "Ph.D" in text: text = text.replace("Ph.D.","Ph<prd>D<prd>")
-	text = re.sub("\s" + alphabets + "[.] "," \\1<prd> ",text)
-	text = re.sub(acronyms+" "+starters,"\\1<stop> \\2",text)
-	text = re.sub(alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]","\\1<prd>\\2<prd>\\3<prd>",text)
-	text = re.sub(alphabets + "[.]" + alphabets + "[.]","\\1<prd>\\2<prd>",text)
-	text = re.sub(" "+suffixes+"[.] "+starters," \\1<stop> \\2",text)
-	text = re.sub(" "+suffixes+"[.]"," \\1<prd>",text)
-	text = re.sub(" " + alphabets + "[.]"," \\1<prd>",text)
-	if "”" in text: text = text.replace(".”","”.")
-	if "\"" in text: text = text.replace(".\"","\".")
-	if "!" in text: text = text.replace("!\"","\"!")
-	if "?" in text: text = text.replace("?\"","\"?")
-	text = text.replace(".",".<stop>")
-	text = text.replace("?","?<stop>")
-	text = text.replace("!","!<stop>")
-	text = text.replace("<prd>",".")
-	sentences = text.split("<stop>")
-	sentences = sentences[:-1]
-	sentences = [s.strip() for s in sentences]
-	return sentences
 
 def parseVolume(name, data):
 
@@ -50,7 +15,6 @@ def parseVolume(name, data):
 	posts_universe = []
 
 	for point in data:
-
 		date.append(point['date'])
 		posts_universe.append(point['posts_universe'])
 
@@ -59,18 +23,19 @@ def parseVolume(name, data):
 	volumeData['Date'] = volumeData['Date'].dt.strftime('%b \'%y')
 
 	volumeData['Universe'] = posts_universe
-
 	volumeData['Universe'] = volumeData['Universe'].astype(int)
 
 	totalVolume = volumeData['Universe'].sum()
 
-	volumeData.to_csv("data/volume/" + name + ".csv")
+	volumeDict = {} 
+	volumeDict.update({'Date':volumeData['Date'].tolist()})
+	volumeDict.update({'Universe':volumeData['Universe'].tolist()})
 
-	return totalVolume
+	return totalVolume, volumeDict
 
 def parseSentiment(name, data):
 
-	volumeData = pd.DataFrame()
+	sentimentData = pd.DataFrame()
 	date = []
 	posts_universe = []
 
@@ -79,13 +44,21 @@ def parseSentiment(name, data):
 		date.append(point['date'])
 		posts_universe.append(point['net_sentiment'])
 
-	volumeData['Date'] = date
-	volumeData['Date'] = pd.to_datetime(volumeData['Date'])
-	volumeData['Date'] = volumeData['Date'].dt.strftime('%b \'%y')
+	sentimentData['Date'] = date
+	sentimentData['Date'] = pd.to_datetime(sentimentData['Date'])
+	sentimentData['Date'] = sentimentData['Date'].dt.strftime('%b \'%y')
 
-	volumeData['Net Sentiment'] = posts_universe
+	sentimentData['Net Sentiment'] = posts_universe
 
-	volumeData.to_csv("data/sentiment/" + name + ".csv")
+	sentimentData['Net Sentiment'] = sentimentData['Net Sentiment']*100
+
+	sentimentData = sentimentData.round({'Net Sentiment': 3,})
+
+	sentimentDict = {} 
+	sentimentDict.update({'Date':sentimentData['Date'].tolist()})
+	sentimentDict.update({'Net Sentiment':sentimentData['Net Sentiment'].tolist()})
+
+	return sentimentDict
 
 
 def parseTopics(name, data):
@@ -116,117 +89,23 @@ def parseTopics(name, data):
 	topicData['positive_percentage'] = topicData['positive_documents'] / topicData['documents']
 	topicData['colors'] = colors
 
-
 	topicData = topicData.sort_values(by = 'documents', ascending = False)
-
 	topicData = topicData.head(10)
 
 	topicData = topicData[['Topic', 'documents', 'colors']]
 
-	topicData.to_csv("data/topics/" + name + ".csv")
+	topicDict = {} 
+	topicDict.update({'Topic':topicData['Topic'].tolist()})
+	topicDict.update({'documents':topicData['documents'].tolist()})
+	topicDict.update({'colors':topicData['colors'].tolist()})
 
+	return topicDict
 
-def parseLinks(name, data):
-
-	#Handles Links
-	links = []
-	#edgeList = []
-	for topic in data:
-
-		for relatedTopics in topic["related_topics"]:
-
-			tempNode = dict()
-			tempNode['source'] = topic['key']
-			tempNode['target'] = relatedTopics['key']
-
-			tempList = []
-			tempList.append(topic['key'])
-			tempList.append(relatedTopics['key'])
-			tempList.sort()
-
-			#s = '-'.join(tempList)
-			#edgeList.append(s)
-			links.append(tempNode)
-
-	linkDF = pd.DataFrame(links)
-	linkDF = pd.concat([linkDF['source'], linkDF['target']]).to_frame()
-	linkDF = linkDF.rename(columns={0:"id"}).value_counts().reset_index().rename(columns={0:"degree"})
-
-	nodes = []
-	for topic in data:
-		tempNode = dict()
-		tempNode['name'] = topic['topic']
-		tempNode['id'] = topic['key']
-
-		if "cluster_id" not in topic.keys():
-			tempNode['cluster_id'] = -1
-		else:
-			tempNode['cluster_id'] = topic['cluster_id']
-
-		nodes.append(tempNode)
-
-		#loop through related nodes
-		for relatedTopic in topic['related_topics']:
-			tempNode = dict()
-			tempNode['name'] = relatedTopic['name']
-			tempNode['id'] = relatedTopic['key']
-
-			if "cluster_id" not in topic.keys():
-				tempNode['cluster_id'] = -1
-			else:
-				tempNode['cluster_id'] = topic['cluster_id']
-
-			nodes.append(tempNode)
-
-			nodeDF = pd.DataFrame(nodes)
-			nodeDF = nodeDF.drop_duplicates(subset = 'id')
-	
-			#Merge in Degrees
-			nodeDF = nodeDF.merge(linkDF, how='left', on='id')
-
-			#Merge in Most Important Labels
-	#Get Unique Cluster IDs
-	clusterIDs = list(set(nodeDF['cluster_id'].tolist()))
-
-	justClusterList = {}
-	for clusterID in clusterIDs:
-		justCluster = nodeDF[nodeDF['cluster_id']==clusterID]
-
-		labelNum = 2
-
-		justCluster = justCluster.sort_values(by=['degree'], ascending = False).head(labelNum)
-		mostImportantLabels = '·'.join(justCluster['name'].tolist())
-
-		topID = justCluster.head(1)['id'].tolist()[0]
-
-		justClusterList.update({topID:mostImportantLabels})
-
-	mainLabels = []
-	for i, row in nodeDF.iterrows():
-		if row['id'] in justClusterList.keys():
-			mainLabels.append(justClusterList.get(row['id']))
-		else:
-			mainLabels.append("No")
-
-	nodeDF['mainLabel'] = mainLabels
-	nodeDF = nodeDF.sort_values(by=['degree'], ascending = True).fillna(0)
-
-	nodeDF = nodeDF[['name', 'id', 'cluster_id', 'mainLabel']]
-
-	nodes = nodeDF.to_dict('records')
-
-	graphJSON = {}
-	graphJSON.update({"nodes":nodes})
-	graphJSON.update({"links":links})
-
-	with open('data/networks/'+name+'.json', 'w') as fp:
-		json.dump(graphJSON, fp)
 
 def parseEmotions(name, data):
 	emotionsData = pd.DataFrame()
 
 	date = []
-
 	totalDocuments = data[0]['documents']
 	emotions = data[0]['emotions']
 
@@ -265,7 +144,6 @@ def getData(query, endpoint, limit):
 
 	return data['output']
 
-
 #This function properly formats a query for Infegy Atlas.
 #Parameters:
 #			queryText: A properly formatted boolean string. For example, if you want to query all posts that mention "Tesla", the query would be "tesla".
@@ -301,38 +179,67 @@ def main():
 	trustSentences = []
 	totalDocuments = []
 
+	volume = {}
+	sentiment = {}
+	topics = {}
+
+	entitiesHashMap = {}
+
 	for i, row in entities.iterrows():
 		print(row['EntityName'])
 		query = createQuery(row['EntityCode'], "month")
 
-		volumeData = getData(query, "volume", 50)
-		totalVolume = parseVolume(row['EntityName'], volumeData)
+		volumeQuery = getData(query, "volume", 50)
+		totalVolume, volumeSeries = parseVolume(row['EntityName'], volumeQuery)
+		volume.update({row['EntityName']:volumeSeries})
 
-		sentimentData = getData(query, "sentiment", 50)
-		parseSentiment(row['EntityName'], sentimentData)
+		sentimentQuery = getData(query, "sentiment", 50)
+		sentiment.update({row['EntityName']:parseSentiment(row['EntityName'], sentimentQuery)})
+
+		topicData = getData(query, "topics", 20)
+		topics.update({row['EntityName']:parseTopics(row['EntityName'], topicData)})
 
 		query = createQuery(row['EntityCode'], "year")
 		emotionData = getData(query, "emotions", 50)
 
-		topicData = getData(query, "topics", 20)
-		parseTopics(row['EntityName'], topicData)
-		parseLinks(row['EntityName'], topicData)
+		tempEmotion = parseEmotions(row['EntityName'], emotionData)[0]
+		tempEmotion = format(int(tempEmotion), ",")
 
-		trustSentences.append(parseEmotions(row['EntityName'], emotionData)[0])
+		totalVolume = format(int(totalVolume), ",")
+
+		trustSentences.append(tempEmotion)
 		totalDocuments.append(totalVolume)
-
 		oneSentence.append(split_into_sentences(row['WikiDescrip'])[0])
+
+		tempDict = {}
+		tempDict.update({"oneSentence":split_into_sentences(row['WikiDescrip'])[0]});
+		tempDict.update({"totalDocuments": totalVolume});
+		tempDict.update({"trustMetric": tempEmotion});
+		tempDict.update({"WikiDescrip":row['WikiDescrip']});
+
+		entitiesHashMap.update({row['EntityName']:tempDict})
 
 	entities['oneSentence'] = oneSentence
 	entities['trustMetric'] = trustSentences
 	entities['totalDocuments'] = totalDocuments
 
-	entities = entities.sort_values(by='trustMetric', ascending = False)
+	entities['trustMetricInt'] = entities['trustMetric'].str.replace(",", "").astype(int)
 
-	entities['trustMetric'] = entities['trustMetric'].astype(int).map('{:,d}'.format)
-	entities['totalDocuments'] = entities['totalDocuments'].astype(int).map('{:,d}'.format)
 
-	entities.to_csv("entities.csv")
+	entities = entities.sort_values(by='trustMetricInt', ascending = False)
+	entities = entities[['EntityName', 'WikiDescrip', 'oneSentence', 'trustMetric', 'totalDocuments']]
+
+	entities = entities.to_dict('records')
+
+	bigJSON = {}
+	bigJSON.update({"entities":entities})
+	bigJSON.update({'entityHashMap':entitiesHashMap})
+	bigJSON.update({"volume":volume})
+	bigJSON.update({"sentiment":sentiment})
+	bigJSON.update({"topics":topics})
+
+	with open('siteData.json', 'w') as fp:
+		json.dump(bigJSON, fp)
 
 main()
 

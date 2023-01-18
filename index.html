@@ -3,43 +3,42 @@
 
 <link rel="stylesheet" type="text/css" href="index.css">
 <script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.2/chart.min.js"></script>
 
 <head>
   <title>Infegy's Most Trusted Brands of 2022</title>
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 </head>
 
-<header class="masthead clear">
-  <div class="centered">
-    <div class="site-branding">
+  <header class="masthead clear">
+    <div class="centered">
+      <div class="site-branding">
 
-      <div class='site-title'>
-        <a href="/"><img src="assets/infegyLogoWhite.svg"/></a>
-        <h1 class="site-title-text">Infegy's Top Trusted Brands</h1>
-      </div>
+        <div class='site-title'>
+          <h1 class="site-title-text" onclick="returnToPage();">Infegy's Top Trusted Brands</h1>
+        </div>
 
-      <p>Infegy's top brands dashboard is a tool that allows users to track and analyze the performance of the world's top brands. The data for the dashboard is sourced from Interbrand, a leading global brand consultancy that produces annual rankings of the world's most valuable brands.</a> </p>
+        <p><br>Infegy's Most Trusted Brands dashboard features a list of 100 global brands, ranked by their 2022 Infegy Trust score.<br><br><b>Methodology:</b><br>The 100 brands featured in this dashboard were sourced from Interbrand’s Best Global Brands 2022 report. Using our consumer intelligence platform, Infegy Atlas, we analyzed the online conversation around each brand using, and then ranked them by their Infegy Trust score.<br><br><b>Infegy Trust score:</b><br>Using proprietary Infegy AI and natural language processing, Infegy Atlas can accurately identify 10 emotions within online posts from every major social media channel. For the purposes of this interactive dashboard, the Trust Score is the total number of positive posts that express trust, limited to the 2022 conversation around each brand.<br><br>Click on the title of the dashboard to return to the main menu.<br><br></p>
 
-      <p>We use natural language processing techniques to analyze the words and phrases used online to make predictions about the emotions that the text is likely to evoke in a reader. We do this by training machine learning algorithms on large datasets of text that have been labeled with emotional tags, like "trust." The AI system can then use this training to analyze new text and predict the emotions that it is likely to evoke in a reader. These were the brands with the highest annual Trust Score, or the brands with the highest percentage of online posts containing trust. </a> </p>
+      </div><!-- .site-title -->
+    </div><!-- .centered -->
+  </header><!-- .masthead -->
 
-    </div><!-- .site-title -->
-  </div><!-- .centered -->
-</header><!-- .masthead -->
+  <main class="main-area">
+    <div class="centered">
+      <section class="cards">
+      </section><!-- .cards -->
+    </div><!-- .centered -->
+  </main>
 
-<main class="main-area">
-  <div class="centered">
-    <section class="cards">
-    </section><!-- .cards -->
-  </div><!-- .centered -->
-</main>
-<script src="populateMainPage.js"></script>
+  <script src="populateMainPage.js"></script>
 
-<header class="masthead clear">
-  <div class="centered">
-    <div class="site-branding">
+  <header class="masthead clear">
+    <div class="centered">
+      <div class="site-branding">
 
-      <p>Brands were sourced from Interbrand's Top 2022 Global Brands Report. Descriptions of brands and companies were sourced from Wikipedia descriptions.</a> </p>
+        <p><br><br>Dataset period: Jan 1, 2022 - Dec 31, 2022. Descriptions of brands and companies sourced from various online sources.</a> </p>
 
-    </div><!-- .site-title -->
-  </div><!-- .centered -->
-</header><!-- .masthead -->
+      </div><!-- .site-title -->
+    </div><!-- .centered -->
+  </header><!-- .masthead -->
